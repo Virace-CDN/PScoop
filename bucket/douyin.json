@@ -1,0 +1,46 @@
+{
+    "##": "抖音",
+    "version": "4.6.0",
+    "description": "Douyin PC Client",
+    "homepage": "https://www.douyin.com/",
+    "license": "Freeware",
+    "url": "https://lf3-cdn-tos.bytegoofy.com/obj/douyin-pc-client/7044145585217083655/releases/12115223/4.6.0/win32-ia32/douyin-v4.6.0-win32-ia32-douyin.exe#/dl.7z",
+    "hash": "58f117506f3949a9cfe1c61cf3399726dd3d7dded41f4568793174e22d20b1d6",
+    "installer": {
+        "script": [
+            "Remove-Item \"$dir\\*\" -Exclude 'app.7z' -Force -Recurse",
+            "Expand-7zipArchive \"$dir\\app.7z\" \"$dir\" -Removal",
+            "Remove-Item \"$dir\\tray\\douyin_widget.exe\" -Force",
+            "Remove-Item \"$dir\\installer_downloader.exe\" -Force",
+            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+            "Mount-ExternalRuntimeData -Source \"$persist_dir\\UserData\" -Target \"$env:APPDATA\\douyin\"",
+            "Remove-Module -Name DoradoUtils"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+            "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\douyin\"",
+            "Remove-Module -Name DoradoUtils"
+        ]
+    },
+    "shortcuts": [
+        [
+            "douyin.exe",
+            "抖音"
+        ]
+    ],
+    "persist": "UserData",
+    "checkver": {
+        "script": [
+            "$url = 'https://lf3-config.bytetcc.com/obj/tcc-config-web/tcc-v2-data-douyin.pc.web-default'",
+            "$res = Invoke-RestMethod -Uri $url -Method Get",
+            "$data = $res.data.download_info | ConvertFrom-Json",
+            "Write-Output $data.version $data.apk"
+        ],
+        "regex": "(?<version>[\\d.]+)\\s(?<link>.+)"
+    },
+    "autoupdate": {
+        "url": "$matchLink#/dl.7z"
+    }
+}

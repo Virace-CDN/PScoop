@@ -1,0 +1,46 @@
+{
+    "version": "1.10.0",
+    "description": "Chrome++ plugin",
+    "homepage": "https://github.com/Bush2021/chrome_plus",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Bush2021/chrome_plus/releases/download/1.10.0/Chrome++_v1.10.0_x86_x64_arm64.7z",
+            "hash": "21c8d3bfe50f5794f9bd7e6d5094efb072014595b4a3651034c1afca49328f02"
+        }
+    },
+    "extract_dir": "x64",
+    "installer": {
+        "script": [
+            "Remove-Item \"$dir\\Data\" -Force -Recurse",
+            "Remove-Item \"$dir\\Cache\" -Force -Recurse",
+            "$iniPath = \"$dir\\App\\chrome++.ini\"",
+            "if (-Not (Test-Path -Path $iniPath)) {",
+            "    exit 1",
+            "}",
+            "$content = Get-Content -Path $iniPath",
+            "$replacements = @{",
+            "    '^data_dir\\s*=\\s*.*$' = 'data_dir=\"%app%\\\\User Data\"'",
+            "    '^cache_dir\\s*=\\s*.*$' = 'cache_dir=\"%app%\\\\User Cache\"'",
+            "    '^show_password\\s*=\\s*1$' = 'show_password=0'",
+            "    '^double_click_close\\s*=\\s*1$' = 'double_click_close=0'",
+            "    '^keep_last_tab\\s*=\\s*1$' = 'keep_last_tab=0'",
+            "    '^wheel_tab\\s*=\\s*1$' = 'wheel_tab=0'",
+            "    '^wheel_tab_when_press_rbutton\\s*=\\s*1$' = 'wheel_tab_when_press_rbutton=0'",
+            "}",
+            "$updatedContent = $content | ForEach-Object {",
+            "    $line = $_",
+            "    foreach ($pattern in $replacements.Keys) {",
+            "        $replacement = $replacements[$pattern]",
+            "        $line = $line -replace $pattern, $replacement",
+            "    }",
+            "    $line",
+            "}",
+            "Set-Content -Path $iniPath -Value $updatedContent"
+          ]
+    },
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/Bush2021/chrome_plus/releases/download/$version/Chrome++_v$version_x86_x64_arm64.7z"
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "version": "129.0.6668.59",
+    "description": "Fast, secure, and free web browser, built for the modern web.",
+    "homepage": "https://www.google.com/chrome/",
+    "depends": ["PrivateBucket/chromeplus", "PrivateBucket/syspin"],
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.google.com/chrome/privacy/eula_text.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://dl.google.com/release2/chrome/gkjbxl7dmfzadbbqlmb6vzen2e_129.0.6668.59/129.0.6668.59_chrome_installer.exe#/dl.7z",
+            "hash": "c3c2f17c672ec5bac219226d8c4e946a5cd1c25f9165d90c2feea01bc99ef4ba"
+        },
+        "32bit": {
+            "url": "https://dl.google.com/release2/chrome/k4qrch3fys3zdyhbhkvdnyzmtq_129.0.6668.59/129.0.6668.59_chrome_installer.exe#/dl.7z",
+            "hash": "b8f59aabe6d91152b9dcd02734128a55a9d65de1681877be33357f4c311f1b56"
+        }
+    },
+    "installer": {
+        "script": "Expand-7zipArchive \"$dir\\chrome.7z\" -ExtractDir 'Chrome-bin' -Removal"
+    },
+    "bin": [
+        [
+            "chrome.exe",
+            "chrome",
+            "--user-data-dir=\"$dir\\User Data\""
+        ]
+    ],
+    "shortcuts": [
+        [
+            "chrome.exe",
+            "Google Chrome",
+            "--user-data-dir=\"$dir\\User Data\""
+        ]
+    ],
+    "post_install": [
+        "$chromeplus_dir = $(scoop prefix chromeplus)",
+        "if (Test-Path $chromeplus_dir) {",
+        "    Copy-Item \"$chromeplus_dir\\App\\version.dll\" \"$dir\"",
+        "    Copy-Item \"$chromeplus_dir\\App\\chrome++.ini\" \"$dir\"",
+        "}",
+        "$chrome_shortcut = \"$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\Google Chrome.lnk\"",
+        "echo $chrome_shortcut",
+        "if (Test-Path $chrome_shortcut) {",
+        "    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($chrome_shortcut)",
+        "    $shortcut.TargetPath = \"$original_dir\\chrome.exe\"",
+        "    $shortcut.WorkingDirectory = \"$original_dir\"",
+        "    $shortcut.Save()",
+        "} else {",
+        "    syspin \"$original_dir\\chrome.exe\" 5386",
+        "}"
+    ],
+    "env_set": {
+        "CHROME_EXECUTABLE": "$dir\\chrome.exe"
+    },
+    "persist": [
+        "User Data",
+        "User Cache"
+    ],
+    "checkver": {
+        "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
+        "regex": "(?sm)<stable32><version>(?<version>[\\d.]+)</version>.+release2/chrome/(?<32>[\\w-]+)_.+<stable64>.+release2/chrome/(?<64>[\\w-]+)_.+</stable64>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dl.google.com/release2/chrome/$match64_$version/$version_chrome_installer.exe#/dl.7z",
+                "hash": {
+                    "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
+                    "xpath": "/chromechecker/stable64[version='$version']/sha256"
+                }
+            },
+            "32bit": {
+                "url": "https://dl.google.com/release2/chrome/$match32_$version/$version_chrome_installer.exe#/dl.7z",
+                "hash": {
+                    "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
+                    "xpath": "/chromechecker/stable32[version='$version']/sha256"
+                }
+            }
+        }
+    }
+}

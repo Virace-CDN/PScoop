@@ -1,0 +1,92 @@
+{
+    "version": "130.0.6723.6",
+    "description": "Fast, secure, and free web browser, built for the modern web.",
+    "homepage": "https://www.google.com/chrome/canary",
+    "depends": ["PrivateBucket/chromeplus", "PrivateBucket/syspin"],
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.google.com/chrome/privacy/eula_text.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://dl.google.com/release2/chrome/ac6g66t62zex77rqsbhasyzg5wya_130.0.6723.6/130.0.6723.6_chrome_installer.exe#/dl.7z",
+            "hash": "e114db9e904c153cd8c17c5218649fe28c4e20fa405b1da43596e39e7098cf5f"
+        },
+        "32bit": {
+            "url": "https://dl.google.com/release2/chrome/c6bjhuxyenf3cfa6th43lkf5wy_130.0.6723.6/130.0.6723.6_chrome_installer.exe#/dl.7z",
+            "hash": "c846b10737720c2b83c5eec0f70c008f086973560de69597975421385124fb6e"
+        }
+    },
+    "installer": {
+        "script": "Expand-7zipArchive \"$dir\\chrome.7z\" -ExtractDir 'Chrome-bin' -Removal"
+    },
+    "bin": [
+        [
+            "chrome.exe",
+            "chrome-canary",
+            "--user-data-dir=\"$dir\\User Data\""
+        ]
+    ],
+    "shortcuts": [
+        [
+            "chrome.exe",
+            "Google Chrome (Canary)",
+            "--user-data-dir=\"$dir\\User Data\""
+        ]
+    ],
+    "checkver": {
+        "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
+        "regex": "(?sm)<canary32><version>(?<version>[\\d.]+)</version>.+release2/chrome/(?<32>[\\w-]+)_.+<canary64>.+release2/chrome/(?<64>[\\w-]+)_.+</canary64>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dl.google.com/release2/chrome/$match64_$version/$version_chrome_installer.exe#/dl.7z",
+                "hash": {
+                    "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
+                    "xpath": "/chromechecker/canary64[version='$version']/sha256"
+                }
+            },
+            "32bit": {
+                "url": "https://dl.google.com/release2/chrome/$match32_$version/$version_chrome_installer.exe#/dl.7z",
+                "hash": {
+                    "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
+                    "xpath": "/chromechecker/canary32[version='$version']/sha256"
+                }
+            }
+        }
+    },
+    "post_install": [
+        "$chromeplus_dir = $(scoop prefix chromeplus)",
+        "if (Test-Path $chromeplus_dir) {",
+        "    Copy-Item \"$chromeplus_dir\\App\\version.dll\" \"$dir\"",
+        "    Copy-Item \"$chromeplus_dir\\App\\chrome++.ini\" \"$dir\"",
+        "}",
+        "$original_dir = \"$original_dir\"",
+        "$quick_launch_path = \"$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\"",
+        "$canary_shortcut = Join-Path $quick_launch_path 'Google Chrome Canary.lnk'",
+        "if (Test-Path $canary_shortcut) {",
+        "    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($canary_shortcut)",
+        "    $shortcut.TargetPath = \"$original_dir\\chrome.exe\"",
+        "    $shortcut.WorkingDirectory = \"$original_dir\"",
+        "    $shortcut.IconLocation = \"$original_dir\\chrome.exe,4\"",
+        "    $shortcut.Save()",
+        "} else {",
+        "    $temp_shortcut = \"$dir\\Google Chrome Canary.lnk\"",
+        "    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($temp_shortcut)",
+        "    $shortcut.TargetPath = \"$original_dir\\chrome.exe\"",
+        "    $shortcut.WorkingDirectory = \"$original_dir\"",
+        "    $shortcut.IconLocation = \"$original_dir\\chrome.exe,4\"",
+        "    $shortcut.Save()",
+        "    syspin $temp_shortcut 5386",
+        "    Remove-Item $temp_shortcut",
+        "}"
+    ],
+    "env_set": {
+        "CHROME_CANARY_EXECUTABLE": "$original_dir\\chrome.exe"
+    },
+    "persist": [
+        "User Data",
+        "User Cache"
+    ]
+}
