@@ -36,11 +36,12 @@
             "$url = 'https://lf3-config.bytetcc.com/obj/tcc-config-web/tcc-v2-data-douyin.pc.web-default'",
             "$res = Invoke-RestMethod -Uri $url -Method Get",
             "$data = $res.data.download_info | ConvertFrom-Json",
-            "Write-Output $data.version $data.apk"
+            "$link = $data.apk -replace 'https://', ''",
+            "Write-Output $data.version $link"
         ],
         "regex": "(?<version>[\\d.]+)\\s(?<link>.+)"
     },
     "autoupdate": {
-        "url": "$matchLink#/dl.7z"
+        "url": "https://$matchLink#/dl.7z"
     }
 }
