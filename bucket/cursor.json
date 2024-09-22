@@ -6,7 +6,7 @@
     "architecture": {
         "64bit": {
             "url": "https://downloader.cursor.sh/windows/nsis/x64",
-            "hash": "6f970ce07066e661dc9cd3bc36aabc45968ac7be66919fbb13ac15be00f092fb"
+            "hash": "b97a90d935254e4ac8390824495550d2533365b5dba1b21c672b1923b4a8e9c8"
         }
     },
     "installer": {
