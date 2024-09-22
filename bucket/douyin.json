@@ -36,12 +36,11 @@
             "$url = 'https://lf3-config.bytetcc.com/obj/tcc-config-web/tcc-v2-data-douyin.pc.web-default'",
             "$res = Invoke-RestMethod -Uri $url -Method Get",
             "$data = $res.data.download_info | ConvertFrom-Json",
-            "$link = $data.apk -replace 'https://', ''",
-            "Write-Output $data.version $link"
+            "Write-Output \"$($data.version)|$($data.apk)\""
         ],
-        "regex": "(?<version>[\\d.]+)\\s(?<link>.+)"
+        "regex": "(?<version>[\\d.]+)\\|.*/(?<part1>\\d+)/releases/(?<part2>\\d+)/(?<version2>[\\d.]+)/.*"
     },
     "autoupdate": {
-        "url": "https://$matchLink#/dl.7z"
+        "url": "https://lf3-cdn-tos.bytegoofy.com/obj/douyin-pc-client/$matchPart1/releases/$matchPart2/$version/win32-ia32/douyin-v$version-win32-ia32-douyin.exe#/dl.7z"
     }
 }
