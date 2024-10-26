@@ -1,11 +1,11 @@
 {
     "##": "抖音",
-    "version": "4.7.0",
+    "version": "4.8.1",
     "description": "Douyin PC Client",
     "homepage": "https://www.douyin.com/",
     "license": "Freeware",
-    "url": "https://lf3-cdn-tos.bytegoofy.com/obj/douyin-pc-client/7044145585217083655/releases/12159605/4.7.0/win32-ia32/douyin-v4.7.0-win32-ia32-douyin.exe#/dl.7z",
-    "hash": "4c8c12b501303100c99f3d87ab58a92cfdb53ebdae175570597884ff7195de0c",
+    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/12199488/4.8.1/win32-mix/douyin-v4.8.1-win32-mix-default.exe",
+    "hash": "7245e2065ebf4c4fbd44e09cbd207a09a6ac5909b30d058f122ea778d2c9d547",
     "installer": {
         "script": [
             "Remove-Item \"$dir\\*\" -Exclude 'app.7z' -Force -Recurse",
@@ -33,14 +33,15 @@
     "persist": "UserData",
     "checkver": {
         "script": [
-            "$url = 'https://lf3-config.bytetcc.com/obj/tcc-config-web/tcc-v2-data-douyin.pc.web-default'",
-            "$res = Invoke-RestMethod -Uri $url -Method Get",
-            "$data = $res.data.download_info | ConvertFrom-Json",
-            "Write-Output \"$($data.version)|$($data.apk)\""
+            "$response = Invoke-RestMethod -Uri 'https://api.toutiaoapi.com/service/settings/v3/?aid=430651&device_id=2689510738&device_platform=pc&from_aid=6383&from_channel&from_version=0.0.0' -Method GET",
+            "$version = $response.data.settings.douyin_pc_update.version",
+            "$url = $response.data.settings.douyin_pc_update.url",
+            "$md5 = $response.data.settings.douyin_pc_update.md5",
+            "Write-Output \"$version|$url|$md5\""
         ],
-        "regex": "(?<version>[\\d.]+)\\|.*/(?<part1>\\d+)/releases/(?<part2>\\d+)/(?<version2>[\\d.]+)/.*"
+        "regex": "^(?<version>[\\d.]+)\\|(?<url>https?://[\\S]+)\\|(?<md5>[a-fA-F0-9]+)$"
     },
     "autoupdate": {
-        "url": "https://lf3-cdn-tos.bytegoofy.com/obj/douyin-pc-client/$matchPart1/releases/$matchPart2/$version/win32-ia32/douyin-v$version-win32-ia32-douyin.exe#/dl.7z"
+        "url": "$matchUrl"
     }
 }
