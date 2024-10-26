@@ -4,7 +4,7 @@
     "description": "Douyin PC Client",
     "homepage": "https://www.douyin.com/",
     "license": "Freeware",
-    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/12199488/4.8.1/win32-mix/douyin-v4.8.1-win32-mix-default.exe",
+    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/12199488/4.8.1/win32-mix/douyin-v4.8.1-win32-mix-default.exe#/dl.7z",
     "hash": "7245e2065ebf4c4fbd44e09cbd207a09a6ac5909b30d058f122ea778d2c9d547",
     "installer": {
         "script": [
@@ -42,6 +42,6 @@
         "regex": "^(?<version>[\\d.]+)\\|(?<url>https?://[\\S]+)\\|(?<md5>[a-fA-F0-9]+)$"
     },
     "autoupdate": {
-        "url": "$matchUrl"
+        "url": "$matchUrl#/dl.7z"
     }
 }
