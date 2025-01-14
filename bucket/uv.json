@@ -1,0 +1,61 @@
+{
+    "version": "0.5.18",
+    "description": "An extremely fast Python package installer and resolver, written in Rust.",
+    "homepage": "https://docs.astral.sh/uv/",
+    "license": "Apache-2.0|MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/astral-sh/uv/releases/download/0.5.18/uv-x86_64-pc-windows-msvc.zip",
+            "hash": "77f414173d0970c8977a614585fc013290659b0d74ae22be24559fde915832de"
+        },
+        "32bit": {
+            "url": "https://github.com/astral-sh/uv/releases/download/0.5.18/uv-i686-pc-windows-msvc.zip",
+            "hash": "06729cf6685f0271e91bcb5cf748d18a5c5d793fa9e0a611d0c7541a0aed574a"
+        }
+    },
+    "pre_install": [
+        "if (!(Test-Path \"$persist_dir\\uv.toml\")) {",
+        "    New-Item -Path \"$dir\\uv.toml\" | Out-Null",
+        "}"
+    ],
+    "env_add_path": [
+        "py-bin",
+        "bin"
+    ],
+    "env_set": {
+        "UV_CONFIG_FILE": "$persist_dir\\uv.toml",
+        "UV_PYTHON_INSTALL_DIR": "$persist_dir\\python",
+        "UV_PYTHON_BIN_DIR": "$persist_dir\\py-bin",
+        "UV_TOOL_DIR": "$persist_dir\\tools",
+        "UV_TOOL_BIN_DIR": "$persist_dir\\bin",
+        "UV_CACHE_DIR": "$persist_dir\\cache"
+    },
+    "persist": [
+        "bin",
+        "py-bin",
+        "python",
+        "tools",
+        "cache",
+        "uv.toml"
+    ],
+    "bin": [
+        "uv.exe",
+        "uvx.exe"
+    ],
+    "checkver": {
+        "github": "https://github.com/astral-sh/uv"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/astral-sh/uv/releases/download/$version/uv-x86_64-pc-windows-msvc.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/astral-sh/uv/releases/download/$version/uv-i686-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "url": "$url.sha256"
+        }
+    }
+}
