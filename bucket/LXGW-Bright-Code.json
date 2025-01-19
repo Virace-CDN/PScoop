@@ -1,23 +1,23 @@
 {
-    "version": "2.602",
+    "version": "2.611",
     "description": "LXGW Bright Code 是由 Monaspace Argon 与 霞鹜文楷系列字体 合并而成的字体，采用 魔兽字体合并补全工具 合并。仅提供 TrueType 格式字体文件。采用 霞鹜文楷 Lite 的半陆标字形，保留直点、断笔等印刷体特征。",
     "homepage": "https://github.com/lxgw/LxgwBright-Code",
     "license": "OFL-1.1",
     "url": [
-        "https://github.com/lxgw/LxgwBright-Code/raw/v2.602/LxgwBrightCode/LXGWBrightCode-ExtraLight.ttf",
-        "https://github.com/lxgw/LxgwBright-Code/raw/v2.602/LxgwBrightCode/LXGWBrightCode-ExtraLightItalic.ttf",
-        "https://github.com/lxgw/LxgwBright-Code/raw/v2.602/LxgwBrightCode/LXGWBrightCode-Italic.ttf",
-        "https://github.com/lxgw/LxgwBright-Code/raw/v2.602/LxgwBrightCode/LXGWBrightCode-Light.ttf",
-        "https://github.com/lxgw/LxgwBright-Code/raw/v2.602/LxgwBrightCode/LXGWBrightCode-LightItalic.ttf",
-        "https://github.com/lxgw/LxgwBright-Code/raw/v2.602/LxgwBrightCode/LXGWBrightCode-Regular.ttf"
+        "https://github.com/lxgw/LxgwBright-Code/raw/v2.611/LxgwBrightCode/LXGWBrightCode-ExtraLight.ttf",
+        "https://github.com/lxgw/LxgwBright-Code/raw/v2.611/LxgwBrightCode/LXGWBrightCode-ExtraLightItalic.ttf",
+        "https://github.com/lxgw/LxgwBright-Code/raw/v2.611/LxgwBrightCode/LXGWBrightCode-Italic.ttf",
+        "https://github.com/lxgw/LxgwBright-Code/raw/v2.611/LxgwBrightCode/LXGWBrightCode-Light.ttf",
+        "https://github.com/lxgw/LxgwBright-Code/raw/v2.611/LxgwBrightCode/LXGWBrightCode-LightItalic.ttf",
+        "https://github.com/lxgw/LxgwBright-Code/raw/v2.611/LxgwBrightCode/LXGWBrightCode-Regular.ttf"
     ],
     "hash": [
-        "f14fed6a5e6dc83a53d209a8e46ae8a581a816e06c8e07cf2730696a82e76f39",
-        "081d3351f5303225a8d9b2d46c29ce4b9ee7080f784353766216cf6486d5ff0c",
-        "28d8a7382aefdef57c7011e9d956eadfcf57acc266f89e0ff64f2519627ea2cd",
-        "149e2472c2f9e6abf766125df2aab8a1fcec206c39950ea4635225b9f85f8fec",
-        "d325b10b114dca6f7417e0105edd5a4057dce9550335b647c92d1389bcd3c50a",
-        "cc7eece81567d7ed1fefff4b1786a9ff9647f4339e5478f5e4d321597a34f36d"
+        "1f493b46760950e44232c26ee1afe263a4156bae5e767c29a5bf0ad8023d5c56",
+        "ed1c7970175d6d8222d765cff6d27133670d9273e483f5eb7e170e44098ed26f",
+        "58ed3efdb70a594a2b54402667d8e78d8d92090f7affc34ab34ff545cd6dff71",
+        "66a8dd575801c2729b0290132605d95686d37a85bf81e4044126035cb3b8cf71",
+        "d649108fa73c950f320a4df6228e3fa4d0f20b036b5d06049faf6b344e5029d3",
+        "c8810904e0b0313fec9a38ab4a6a56469b8ad08a38cdafb185d0bcec45d91f50"
     ],
     "installer": {
         "script": [
