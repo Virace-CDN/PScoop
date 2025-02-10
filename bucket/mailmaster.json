@@ -1,5 +1,5 @@
 {
-    "version": "5.2.1.1014",
+    "version": "5.2.2.1009",
     "description": "网易邮箱大师是网易提供的一款功能丰富的邮箱客户端。",
     "homepage": "https://mail.163.com/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "http://fm.dl.126.net/mailmaster/update2/mail-5.2.1.1014.exe#/dl.7z",
-            "hash": "md5:2e8c2d07aa2ef9245d86330fa9ecb8e3"
+            "url": "http://fm.dl.126.net/mailmaster/update2/mail-5.2.2.1009.exe#/dl.7z",
+            "hash": "md5:d2990fd1065a21731483625a840166a9"
         }
     },
     "installer": {
