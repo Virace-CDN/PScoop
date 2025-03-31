@@ -34,7 +34,7 @@
             "微信"
         ]
     ],
-    "persist": "Weixin Files",
+    "persist": "xwechat_files",
     "uninstaller": {
         "script": [
             "Remove-Item -Path \"$env:APPDATA\\Tencent\\xwechat\\config\\51a1fffea11325a1e4104c6b3de47af7.ini\" -Force | Out-Null",
