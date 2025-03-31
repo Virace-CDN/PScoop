@@ -1,0 +1,65 @@
+{
+    "version": "4.0.3.19",
+    "description": "Free messaging and calling app by Tencent",
+    "homepage": "https://pc.weixin.qq.com/",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://www.wechat.com/en/service_terms.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe#/dl.7z",
+            "hash": "0a2f9b82b6cc1230212c9804b8914244f422c3066269e1aac669822ec1573e3e"
+        }
+    },
+    "pre_install": [
+        "$configpath = \"$env:APPDATA\\Tencent\\xwechat\\config\"",
+        "ensure \"$configpath\" | Out-Null",
+        "Set-Content -NoNewline -Path \"$configpath\\51a1fffea11325a1e4104c6b3de47af7.ini\" -Value \"$persist_dir\""
+    ],
+    "installer": {
+        "script": [
+            "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Force -Recurse",
+            "Expand-7zipArchive \"$dir\\install.7z\" $dir",
+            "Remove-Item \"$dir\\install.7z\" -Force -ErrorAction SilentlyContinue | Out-Null",
+            "New-ItemProperty -Path \"HKCU:\\Software\\Tencent\\Weixin\" -Name \"InstallPath\" -Value \"$dir\" -PropertyType String -Force | Out-Null",
+            "New-ItemProperty -Path \"HKCU:\\Software\\Tencent\\Weixin\" -Name \"Version\" -Value \"$version\" -PropertyType String -Force | Out-Null"
+        ]
+    },
+    "bin": "Weixin.exe",
+    "shortcuts": [
+        [
+            "Weixin.exe",
+            "微信"
+        ]
+    ],
+    "persist": "Weixin Files",
+    "uninstaller": {
+        "script": [
+            "Remove-Item -Path \"$env:APPDATA\\Tencent\\xwechat\\config\\51a1fffea11325a1e4104c6b3de47af7.ini\" -Force | Out-Null",
+            "Remove-Item -Path \"HKCU:\\Software\\Tencent\\Weixin\" -Recurse -Force -ErrorAction SilentlyContinue | Out-Null"
+        ]
+    },
+    "checkver": {
+        "script": [
+            "$baseUrl = 'https://github.com/SpecterShell/Dumplings/raw/refs/heads/main/Tasks/Tencent.WeChat.Universal/'",
+            "$linkUrl = $baseUrl + 'State.yaml'",
+            "$symlink = Invoke-WebRequest -UseBasicParsing -Uri $linkUrl",
+            "$targetFile = $symlink.Content.Trim()",
+            "$content = Invoke-WebRequest -UseBasicParsing -Uri \"$baseUrl$targetFile\"",
+            "Write-Output $content.Content"
+        ],
+        "regex": "Version: ([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe#/dl.7z",
+                "hash": {
+                    "url": "https://github.com/microsoft/winget-pkgs/raw/refs/heads/master/manifests/t/Tencent/WeChat/Universal/$version/Tencent.WeChat.Universal.installer.yaml",
+                    "regex": "InstallerSha256:\\s+([a-fA-F0-9]{64})"
+                }
+            }
+        }
+    }
+}
