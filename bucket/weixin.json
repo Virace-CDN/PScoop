@@ -22,6 +22,7 @@
             "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Force -Recurse",
             "Expand-7zipArchive \"$dir\\install.7z\" $dir",
             "Remove-Item \"$dir\\install.7z\" -Force -ErrorAction SilentlyContinue | Out-Null",
+            "if (!(Test-Path \"HKCU:\\Software\\Tencent\\Weixin\")) { New-Item -Path \"HKCU:\\Software\\Tencent\" -Name \"Weixin\" -Force | Out-Null }",
             "New-ItemProperty -Path \"HKCU:\\Software\\Tencent\\Weixin\" -Name \"InstallPath\" -Value \"$dir\" -PropertyType String -Force | Out-Null",
             "New-ItemProperty -Path \"HKCU:\\Software\\Tencent\\Weixin\" -Name \"Version\" -Value \"$version\" -PropertyType String -Force | Out-Null"
         ]
