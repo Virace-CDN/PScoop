@@ -11,12 +11,12 @@
         }
     },
     "pre_install": [
-        "innounp -x -d\"$dir\" \"$dir\\CursorUserSetup-x64-$version.exe\" | Out-Null",
+        "innounp -x -d\"$dir\" \"$dir\\CursorSetup-x64-$version.exe\" | Out-Null",
         "Move-Item -Force -Path \"$dir\\{app}\\tools\\*\" -Destination \"$dir\"",
         "Move-Item -Force -Path \"$dir\\{code_GetDestDir}\\*\" -Destination \"$dir\"",
         "Remove-Item -Force -Path \"$dir\\{app}\" -Recurse",
         "Remove-Item -Force -Path \"$dir\\{code_GetDestDir}\" -Recurse",
-        "Remove-Item -Force -Path \"$dir\\CursorUserSetup-x64-$version.exe\" -Recurse",
+        "Remove-Item -Force -Path \"$dir\\CursorSetup-x64-$version.exe\" -Recurse",
         "if (!(Test-Path \"$dir\\data\\extensions\") -and (Test-Path \"$env:USERPROFILE\\.cursor\\extensions\")) {",
         "    info '[Portable Mode] Copying extensions...'",
         "    Copy-Item \"$env:USERPROFILE\\.cursor\\extensions\" \"$dir\\data\" -Recurse",
