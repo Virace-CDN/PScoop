@@ -1,5 +1,5 @@
 {
-    "version": "137.0.7118.2",
+    "version": "137.0.7120.0",
     "description": "Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/chrome/canary",
     "depends": [
@@ -12,12 +12,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dl.google.com/release2/chrome/acywiopezskv3i7vatphjwmvscma_137.0.7118.2/137.0.7118.2_chrome_installer.exe#/dl.7z",
-            "hash": "7fe9b18b5bf9cd194111f8cf9e2b30bb42fff635e8f9758e4b1a5bdfe298b7f4"
-        },
-        "32bit": {
-            "url": "https://dl.google.com/release2/chrome/ho2jyvt7ymwvypt3ev5ofsoizi_137.0.7118.2/137.0.7118.2_chrome_installer.exe#/dl.7z",
-            "hash": "78d27f17294d1f065579513ea43859b7282cdfcd6cab46b1f2293991616e0763"
+            "url": "https://dl.google.com/release2/chrome/acbbrcixw5fvnpulpnsifbjpjdfa_137.0.7120.0/137.0.7120.0_chrome_installer.exe",
+            "hash": "b48e7bca13914f3959d46fcb7db2811aadd359389590d355ae57b9fd7dca1f0e"
         }
     },
     "installer": {
@@ -38,23 +34,24 @@
         ]
     ],
     "checkver": {
-        "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
-        "regex": "(?sm)<canary32><version>(?<version>[\\d.]+)</version>.+release2/chrome/(?<32>[\\w-]+)_.+<canary64>.+release2/chrome/(?<64>[\\w-]+)_.+</canary64>"
+        "script": [
+            "$json = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Bush2021/chrome_installer/refs/heads/main/data.json'",
+            "$version = $json.win_canary_x64.version",
+            "$url = $json.win_canary_x64.urls[0]",
+            "$url -match '/chrome/(?<id>[^_]+)_' | Out-Null",
+            "$id = $Matches['id']",
+            "Write-Output \"$version|$id\""
+        ],
+        "regex": "^(?<version>[\\d.]+)\\|(?<id>[a-z0-9]+)$"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://dl.google.com/release2/chrome/$match64_$version/$version_chrome_installer.exe#/dl.7z",
+                "url": "https://dl.google.com/release2/chrome/$matchId_$version/$version_chrome_installer.exe",
                 "hash": {
-                    "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
-                    "xpath": "/chromechecker/canary64[version='$version']/sha256"
-                }
-            },
-            "32bit": {
-                "url": "https://dl.google.com/release2/chrome/$match32_$version/$version_chrome_installer.exe#/dl.7z",
-                "hash": {
-                    "url": "https://scoopinstaller.github.io/UpdateTracker/googlechrome/chrome.min.xml",
-                    "xpath": "/chromechecker/canary32[version='$version']/sha256"
+                    "mode": "json",
+                    "url": "https://github.com/Bush2021/chrome_installer/raw/refs/heads/main/data.json",
+                    "jsonpath": "$.win_canary_x64.sha256"
                 }
             }
         }
