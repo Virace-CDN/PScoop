@@ -1,11 +1,11 @@
 {
     "##": "抖音",
-    "version": "5.0.1",
+    "version": "5.8.0",
     "description": "Douyin PC Client",
     "homepage": "https://www.douyin.com/",
     "license": "Freeware",
-    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/12235365/5.0.1/win32-mix/douyin-v5.0.1-win32-mix-default.exe#/dl.7z",
-    "hash": "992488bd074e125096a9b7c42d50af327f7f61db1a1d3a03ba424bf435fd88ff",
+    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/128907724/5.8.0/win32-x64/douyin-v5.8.0-win32-x64-default.exe#/dl.7z",
+    "hash": "443d4fec22479c0c43e7ebb1150c128943f22db879c8fd0145eea6402d5626f9",
     "installer": {
         "script": [
             "Remove-Item \"$dir\\*\" -Exclude 'app.7z' -Force -Recurse",
@@ -33,7 +33,7 @@
     "persist": "UserData",
     "checkver": {
         "script": [
-            "$response = Invoke-RestMethod -Uri 'https://api.toutiaoapi.com/service/settings/v3/?aid=430651&device_id=2689510738&device_platform=pc&from_aid=6383&from_channel&from_version=0.0.0' -Method GET",
+            "$response = Invoke-RestMethod -Uri 'https://api.toutiaoapi.com/service/settings/v3/?app=1&aid=430651&app_arch=x86_64&arch_info=x86_64&auto_update_x64=1&auto_update_x64_memory_threshold_gb=8&cpu_processor_count=32&device_platform=pc&from_aid=6383&from_channel&from_version=5.0.1&physical_menory=65452&sys_name=Windows_NT&sys_version=10.0.26100&version_code=0.0.0' -Method GET",
             "$version = $response.data.settings.douyin_pc_update.version",
             "$url = $response.data.settings.douyin_pc_update.url",
             "$md5 = $response.data.settings.douyin_pc_update.md5",
