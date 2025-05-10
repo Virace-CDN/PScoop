@@ -1,13 +1,13 @@
 {
-    "version": "0.49.6",
+    "version": "0.50.0",
     "description": "An AI code editor",
     "homepage": "https://www.cursor.com/",
     "license": "freeware",
     "depends": "main/innounp",
     "architecture": {
         "64bit": {
-            "url": "https://downloads.cursor.com/production/0781e811de386a0c5bcb07ceb259df8ff8246a52/win32/x64/system-setup/CursorSetup-x64-0.49.6.exe",
-            "hash": "7b82ae676726fa70c4fdec0cb1b32288cbf06b162de7a92a7731b725e19a9cd1"
+            "url": "https://downloads.cursor.com/production/bbfa51c1211255cbbde8b558e014a593f44051f4/win32/x64/user-setup/CursorUserSetup-x64-0.50.0.exe",
+            "hash": "175c1b60df09fe657668755b8996fb5279d26716f38dd0da91cd9e20654b2552"
         }
     },
     "pre_install": [
@@ -55,18 +55,13 @@
     ],
     "persist": "data",
     "checkver": {
-        "script": [
-            "$response = Invoke-RestMethod -Uri 'https://www.cursor.com/api/download?platform=win32-x64&releaseTrack=stable' -Method GET",
-            "$version = $response.version",
-            "$url = $response.downloadUrl",
-            "Write-Output \"$version|$url\""
-        ],
-        "regex": "^(?<version>[\\d.]+)\\|(?<url>https?://[\\S]+)$"
+        "url": "https://raw.githubusercontent.com/oslook/cursor-ai-downloads/main/version-history.json",
+        "regex": "\"version\":\\s*\"([^\"]+)\"[^}]*\"win32-x64-user\":\\s*\"https://downloads\\.cursor\\.com/production/([^/]+)/win32"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchUrl"
+                "url": "https://downloads.cursor.com/production/$match2/win32/x64/user-setup/CursorUserSetup-x64-$match1.exe"
             }
         }
     }
