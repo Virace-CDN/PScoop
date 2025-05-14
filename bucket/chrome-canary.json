@@ -1,5 +1,5 @@
 {
-    "version": "138.0.7177.0",
+    "version": "138.0.7178.0",
     "description": "Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/chrome/canary",
     "depends": [
@@ -12,8 +12,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dl.google.com/release2/chrome/k6pknzgshekxyznio32wncgnde_138.0.7177.0/138.0.7177.0_chrome_installer.exe#/dl.7z",
-            "hash": "daff1ff687b9a82fc7315866023a4da37004713fd25034773373a80433f76886"
+            "url": "https://dl.google.com/release2/chrome/adjf5alyjgjxcok7ob53xgry3mda_138.0.7178.0/138.0.7178.0_chrome_installer.exe#/dl.7z",
+            "hash": "e3804214f37033db6c9d75d5e61e67623aecf7bda64ec2ccb2616839aef5a133"
         }
     },
     "installer": {
