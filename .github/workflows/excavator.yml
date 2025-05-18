@@ -10,6 +10,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@main
+      - name: Install PowerShell-YAML
+        shell: pwsh
+        run: |
+          Install-Module -Name powershell-yaml -Force
+          Import-Module powershell-yaml
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
         env:
