@@ -25,7 +25,7 @@
     },
     "extract_dir": "core",
     "post_install": [
-        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
         "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:APPDATA\\Mozilla\"",
         "Remove-Module -Name DoradoUtils",
         "$prefsPath = Join-Path $dir 'defaults\\pref\\channel-prefs.js'",
@@ -51,7 +51,7 @@
         "}"
     ],
     "post_uninstall": [
-        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
         "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\Mozilla\"",
         "Remove-Module -Name DoradoUtils"
     ],

@@ -13,14 +13,14 @@
             "Remove-Item \"$dir\\$version\\tray\\douyin_widget.exe\" -Force",
             "Remove-Item \"$dir\\$version\\installer_downloader.exe\" -Force",
             "Copy-Item \"$dir\\$version\\douyin.backup\" \"$dir\\douyin.exe\" -Force",
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\UserData\" -Target \"$env:APPDATA\\douyin\"",
             "Remove-Module -Name DoradoUtils"
         ]
     },
     "uninstaller": {
         "script": [
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
             "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\douyin\"",
             "Remove-Module -Name DoradoUtils"
         ]

@@ -33,14 +33,14 @@
     ],
     "installer": {
         "script": [
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:APPDATA\\Cursor\"",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\Config\" -Target \"$env:USERPROFILE\\.cursor\"",
             "Remove-Module -Name DoradoUtils"
         ]
     },
     "post_uninstall": [
-        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/DoradoUtils.psm1)",
+        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
         "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\Cursor\"",
         "Dismount-ExternalRuntimeData -Target \"$env:USERPROFILE\\.cursor\"",
         "Remove-Module -Name DoradoUtils"
