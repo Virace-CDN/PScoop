@@ -19,7 +19,7 @@
             "Remove-Item \"$dir\\MailMaster-bin\" -Force -Recurse",
             "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name dorado) scripts/Utils.psm1)",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:LOCALAPPDATA\\Netease\\MailMaster\"",
-            "Remove-Module -Name DoradoUtils",
+            "Remove-Module -Name Utils",
             "$profileIniPath = \"$persist_dir\\AppData\\profile.ini\"",
             "if (-Not (Test-Path -Path $profileIniPath)) {",
             "    New-Item -Path $profileIniPath -ItemType File -Force | Out-Null",
@@ -31,7 +31,7 @@
         "script": [
             "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name dorado) scripts/Utils.psm1)",
             "Dismount-ExternalRuntimeData -Target \"$env:LOCALAPPDATA\\Netease\\MailMaster\"",
-            "Remove-Module -Name DoradoUtils"
+            "Remove-Module -Name Utils"
         ]
     },
     "persist": [

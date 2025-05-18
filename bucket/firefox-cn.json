@@ -27,7 +27,7 @@
     "post_install": [
         "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
         "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:APPDATA\\Mozilla\"",
-        "Remove-Module -Name DoradoUtils",
+        "Remove-Module -Name Utils",
         "$prefsPath = Join-Path $dir 'defaults\\pref\\channel-prefs.js'",
         "if (Test-Path $prefsPath) {",
         "    (Get-Content $prefsPath) -replace 'pref\\(\"app\\.update\\.channel\",\\s*\".*\"\\);', 'pref(\"app.update.channel\", \"\");' | Set-Content $prefsPath",
@@ -53,7 +53,7 @@
     "post_uninstall": [
         "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
         "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\Mozilla\"",
-        "Remove-Module -Name DoradoUtils"
+        "Remove-Module -Name Utils"
     ],
     "bin": "firefox.exe",
     "shortcuts": [
