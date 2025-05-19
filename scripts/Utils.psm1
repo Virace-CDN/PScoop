@@ -61,7 +61,8 @@ function Get-DumplingsInstallerInfo {
 
     .DESCRIPTION
         从 SpecterShell/Dumplings 仓库获取指定应用程序的最新版本安装程序信息
-        优先获取 x64 架构的安装程序 URL，如果没有则获取 x86 架构的，如果都没有则报错
+        返回所有可用架构（x86、x64、arm64）的安装程序 URL
+        如果存在 RealVersion，则使用它作为最终版本号
 
     .PARAMETER AppId
         应用程序的标识符，例如 "ByteDance.Doubao"
@@ -81,55 +82,49 @@ function Get-DumplingsInstallerInfo {
     # 构建 State.yaml 文件的 URL
     $stateUrl = "https://github.com/SpecterShell/Dumplings/raw/refs/heads/main/Tasks/$AppId/State.yaml"
     Write-Verbose "State URL: $stateUrl"
-    
+
     try {
         # 获取 State.yaml 文件内容
         $stateContent = Invoke-WebRequest -Uri $stateUrl -ErrorAction Stop
         $logFileName = $stateContent.Content.Trim()
         Write-Verbose "日志文件名: $logFileName"
-        
+
         # 构建日志文件的 URL
         $logUrl = "https://github.com/SpecterShell/Dumplings/raw/refs/heads/main/Tasks/$AppId/$logFileName"
         Write-Verbose "日志 URL: $logUrl"
-        
+
         # 获取并解析日志文件内容
         $logContent = Invoke-WebRequest -Uri $logUrl -ErrorAction Stop
         $installerInfo = ConvertFrom-Yaml $logContent.Content
-        
-        # 提取安装程序信息，优先 x64，其次 x86
-        $selectedInstaller = $null
-        $x64Installer = $null
-        $x86Installer = $null
-        
-        # 遍历所有安装程序，查找 x64 和 x86 架构
+
+        # 创建结果对象
+        $result = @{}
+
+        # 设置版本号，优先使用 RealVersion（如果存在）
+        if ($installerInfo.RealVersion) {
+            $result.Version = $installerInfo.RealVersion
+            Write-Verbose "使用 RealVersion: $($installerInfo.RealVersion)"
+        } else {
+            $result.Version = $installerInfo.Version
+            Write-Verbose "使用 Version: $($installerInfo.Version)"
+        }
+
+        # 遍历所有安装程序，收集不同架构的 URL
         foreach ($installer in $installerInfo.Installer) {
-            if ($installer.Architecture -eq "x64") {
-                $x64Installer = $installer
-            } elseif ($installer.Architecture -eq "x86") {
-                $x86Installer = $installer
+            if ($installer.Architecture -eq "x86") {
+                $result.x86 = $installer.InstallerUrl
+                Write-Verbose "找到 x86 架构安装程序: $($installer.InstallerUrl)"
+            } elseif ($installer.Architecture -eq "x64") {
+                $result.x64 = $installer.InstallerUrl
+                Write-Verbose "找到 x64 架构安装程序: $($installer.InstallerUrl)"
+            } elseif ($installer.Architecture -eq "arm64") {
+                $result.arm64 = $installer.InstallerUrl
+                Write-Verbose "找到 arm64 架构安装程序: $($installer.InstallerUrl)"
             }
         }
-        
-        # 优先选择 x64，其次选择 x86
-        if ($x64Installer) {
-            $selectedInstaller = $x64Installer
-            Write-Verbose "找到 x64 架构安装程序"
-        } elseif ($x86Installer) {
-            $selectedInstaller = $x86Installer
-            Write-Verbose "找到 x86 架构安装程序"
-        } else {
-            throw "未找到支持的安装程序架构（x64 或 x86）"
-        }
-        
-        # 创建结果对象
-        $result = @{
-            Version = $installerInfo.Version
-            InstallerUrl = $selectedInstaller.InstallerUrl
-        }
-        
+
         return $result
-    }
-    catch {
+    } catch {
         Write-Error "获取应用信息时出错: $_"
         return $null
     }

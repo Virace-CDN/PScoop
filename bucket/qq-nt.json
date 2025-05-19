@@ -1,0 +1,42 @@
+{
+    "version": "9.9.19.34958",
+    "description": "An instant messaging software service developed by Tencent",
+    "homepage": "https://im.qq.com/pcqq/index.shtml",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://ti.qq.com/agreement/index.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.19_250512_x64_01.exe#/dl.7z",
+            "hash": "c4f030b2d7fce4cc3f1d77e55fb61cbea41a0889b40aaa99b7d18389b7019b4a"
+        }
+    },
+    "extract_dir": "Files",
+    "shortcuts": [
+        [
+            "QQ.exe",
+            "QQ"
+        ]
+    ],
+    "checkver": {
+        "script": [
+            "Import-Module $(Join-Path $pwd scripts/Utils.psm1)",
+            "$data = Get-DumplingsInstallerInfo -AppId \"Tencent.QQ.NT\"",
+            "\"ver:$($data.Version);\"",
+            "\"url:$($data.x64);\""
+        ],
+        "regex": "ver:(?<version>.+?); url:(?<url>.+?);"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl#/dl.7z",
+                "hash": {
+                    "url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/t/Tencent/QQ/NT/$version/Tencent.QQ.NT.installer.yaml",
+                    "regex": "Architecture: x64[\\s\\S]+?InstallerSha256:\\s?(.+)"
+                }
+            }
+        }
+    }
+}
