@@ -29,18 +29,39 @@ function Initialize-QQNT {
     $configFile = "$env:PUBLIC\Documents\Tencent\QQ\UserDataInfo.ini"
     $configDir = Split-Path $configFile -Parent
 
-    if (!(Test-Path $configDir)) {
-        New-Item -ItemType Directory -Path $configDir -Force | Out-Null
+    # 检查是否已存在配置文件，并且已经设置了自定义路径
+    $customPathAlreadySet = $false
+    $originalUserDataPath = $null
+
+    if (Test-Path $configFile) {
+        $iniContent = Get-Content $configFile -Raw
+        if ($iniContent -match 'UserDataSavePathType=2') {
+            $customPathAlreadySet = $true
+            # 尝试提取原始路径
+            if ($iniContent -match 'UserDataSavePath=(.+)') {
+                $originalUserDataPath = $matches[1].Trim()
+                Write-Host "检测到已有自定义数据路径: $originalUserDataPath" -ForegroundColor Yellow
+                Write-Host "建议路径: $PersistDir\Tencent Files" -ForegroundColor Yellow
+                Write-Host "为避免数据丢失，请手动将数据从当前路径迁移到建议路径，然后修改配置文件。" -ForegroundColor Yellow
+            }
+        }
     }
 
-    $iniContent = @"
+    if (!$customPathAlreadySet) {
+        # 如果没有设置自定义路径，则创建配置文件
+        if (!(Test-Path $configDir)) {
+            New-Item -ItemType Directory -Path $configDir -Force | Out-Null
+        }
+
+        $iniContent = @"
 [UserDataSet]
 UserDataSavePathType=2
 UserDataSavePath=$PersistDir\Tencent Files
 "@
 
-    Set-Content -Path $configFile -Value $iniContent -Force
-    Write-Host "已配置 QQ-NT 数据存储路径: $PersistDir\Tencent Files" -ForegroundColor Cyan
+        Set-Content -Path $configFile -Value $iniContent -Force
+        Write-Host "已配置 QQ-NT 数据存储路径: $PersistDir\Tencent Files" -ForegroundColor Cyan
+    }
 
     # 2. 更新注册表版本信息
     $regPath = 'HKCU:\Software\Tencent\QQNT'
@@ -51,42 +72,45 @@ UserDataSavePath=$PersistDir\Tencent Files
     Write-Host "已更新注册表版本信息: $Version" -ForegroundColor Cyan
 
     # 3. 处理用户数据迁移
-    $userTencentFiles = "$env:USERPROFILE\Documents\Tencent Files"
-    $persistTencentFiles = "$PersistDir\Tencent Files"
+    # 只有在没有设置自定义路径时才进行数据迁移
+    if (!$customPathAlreadySet) {
+        $userTencentFiles = "$env:USERPROFILE\Documents\Tencent Files"
+        $persistTencentFiles = "$PersistDir\Tencent Files"
 
-    if (Test-Path $userTencentFiles) {
-        if (!(Test-Path $persistTencentFiles)) {
-            New-Item -ItemType Directory -Path $persistTencentFiles -Force | Out-Null
-        }
-
-        # 获取用户目录下的文件夹，排除 "1" 和 "nt_qq"
-        $userFolders = Get-ChildItem -Path $userTencentFiles -Directory |
-                       Where-Object { $_.Name -ne '1' -and $_.Name -ne 'nt_qq' }
-
-        # 获取持久化目录下的文件夹名称列表
-        $persistFolders = Get-ChildItem -Path $persistTencentFiles -Directory |
-                          ForEach-Object { $_.Name }
-
-        # 找出冲突的文件夹（两边都有的）
-        $conflictFolders = $userFolders | Where-Object { $persistFolders -contains $_.Name }
-
-        # 找出需要迁移的新文件夹（用户目录有但持久化目录没有的）
-        $newFolders = $userFolders | Where-Object { $persistFolders -notcontains $_.Name }
-
-        # 处理冲突文件夹
-        if ($conflictFolders) {
-            Write-Host "警告: 发现冲突的QQ数据文件夹，请手动迁移以下文件夹的数据:" -ForegroundColor Yellow
-            $conflictFolders | ForEach-Object { Write-Host "  - $($_.FullName)" }
-        }
-
-        # 处理新文件夹
-        if ($newFolders) {
-            Write-Host "发现新的QQ数据文件夹，正在复制到持久化目录..." -ForegroundColor Cyan
-            $newFolders | ForEach-Object {
-                Write-Host "  - 复制 $($_.Name) 到 $persistTencentFiles"
-                Copy-Item -Path $_.FullName -Destination "$persistTencentFiles\$($_.Name)" -Recurse -Force
+        if (Test-Path $userTencentFiles) {
+            if (!(Test-Path $persistTencentFiles)) {
+                New-Item -ItemType Directory -Path $persistTencentFiles -Force | Out-Null
             }
-            Write-Host "复制完成。请手动删除原始数据文件夹中的数据以节省空间。" -ForegroundColor Green
+
+            # 获取用户目录下的文件夹，排除 "1" 和 "nt_qq"
+            $userFolders = Get-ChildItem -Path $userTencentFiles -Directory |
+            Where-Object { $_.Name -ne '1' -and $_.Name -ne 'nt_qq' }
+
+            # 获取持久化目录下的文件夹名称列表
+            $persistFolders = Get-ChildItem -Path $persistTencentFiles -Directory |
+            ForEach-Object { $_.Name }
+
+            # 找出冲突的文件夹（两边都有的）
+            $conflictFolders = $userFolders | Where-Object { $persistFolders -contains $_.Name }
+
+            # 找出需要迁移的新文件夹（用户目录有但持久化目录没有的）
+            $newFolders = $userFolders | Where-Object { $persistFolders -notcontains $_.Name }
+
+            # 处理冲突文件夹
+            if ($conflictFolders) {
+                Write-Host "警告: 发现冲突的QQ数据文件夹，请手动迁移以下文件夹的数据:" -ForegroundColor Yellow
+                $conflictFolders | ForEach-Object { Write-Host "  - $($_.FullName)" }
+            }
+
+            # 处理新文件夹
+            if ($newFolders) {
+                Write-Host "发现新的QQ数据文件夹，正在复制到持久化目录..." -ForegroundColor Cyan
+                $newFolders | ForEach-Object {
+                    Write-Host "  - 复制 $($_.Name) 到 $persistTencentFiles"
+                    Copy-Item -Path $_.FullName -Destination "$persistTencentFiles\$($_.Name)" -Recurse -Force
+                }
+                Write-Host "复制完成。请手动删除原始数据文件夹中的数据以节省空间。" -ForegroundColor Green
+            }
         }
     }
 }

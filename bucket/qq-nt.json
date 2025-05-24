@@ -21,7 +21,7 @@
     ],
     "checkver": {
         "script": [
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
             "$data = Get-DumplingsInstallerInfo -AppId \"Tencent.QQ.NT\"",
             "\"ver:$($data.Version);\"",
             "\"url:$($data.x64);\""

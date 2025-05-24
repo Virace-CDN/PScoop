@@ -15,14 +15,14 @@
             "Expand-7ZipArchive \"$file\" \"$dir\\\" -Removal",
             "Expand-7ZipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\" -Removal",
             "Remove-Item \"$dir\\`$PLUGINSDIR\",\"$dir\\`$R0\",\"$dir\\`$LOCALAPPDATA\"  -Force -Recurse",
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:APPDATA\\Cursor\"",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\Config\" -Target \"$env:USERPROFILE\\.cursor\"",
             "Remove-Module -Name Utils"
         ]
     },
     "post_uninstall": [
-        "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name PrivateBucket) scripts/Utils.psm1)",
+        "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
         "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\Cursor\"",
         "Dismount-ExternalRuntimeData -Target \"$env:USERPROFILE\\.cursor\"",
         "Remove-Module -Name Utils"
