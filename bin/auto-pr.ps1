@@ -1,6 +1,6 @@
 param(
     # overwrite upstream param
-    [String]$upstream = "Virace-CDN/PrivateBucket:main"
+    [String]$upstream = "Virace-CDN/PScoop:main"
 )
 
 if (!$env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) }

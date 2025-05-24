@@ -3,8 +3,8 @@
     "description": "Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/chrome/",
     "depends": [
-        "PrivateBucket/chromeplus",
-        "PrivateBucket/syspin"
+        "pscoop/chromeplus",
+        "pscoop/syspin"
     ],
     "license": {
         "identifier": "Freeware",
