@@ -1,5 +1,5 @@
 {
-    "version": "9.9.19.35184",
+    "version": "9.9.19.35469",
     "description": "An instant messaging software service developed by Tencent",
     "homepage": "https://im.qq.com/pcqq/index.shtml",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.19_250519_x64_01.exe#/dl.7z",
-            "hash": "a4d4e820ca97e63ab162d42573afa743560e8404f7e6f260965c85d7f53438e5"
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.19_250523_x64_01.exe#/dl.7z",
+            "hash": "0174f703d02d8389f3228e6aa39aacf9688b5ac31a7d8aa2ebb1afd1a7c3ade7"
         }
     },
     "extract_dir": "Files",
@@ -21,7 +21,7 @@
     ],
     "checkver": {
         "script": [
-            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
+            "Import-Module \".\\scripts\\Utils.psm1\"",
             "$data = Get-DumplingsInstallerInfo -AppId \"Tencent.QQ.NT\"",
             "\"ver:$($data.Version);\"",
             "\"url:$($data.x64);\""
