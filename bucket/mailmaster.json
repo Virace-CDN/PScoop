@@ -17,7 +17,7 @@
             "Expand-7ZipArchive \"$dir\\mailmaster.7z\" \"$dir\" -Removal",
             "Move-Item \"$dir\\MailMaster-bin\\*\" \"$dir\" -Force",
             "Remove-Item \"$dir\\MailMaster-bin\" -Force -Recurse",
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name dorado) scripts/Utils.psm1)",
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
             "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:LOCALAPPDATA\\Netease\\MailMaster\"",
             "Remove-Module -Name Utils",
             "$profileIniPath = \"$persist_dir\\AppData\\profile.ini\"",
@@ -29,7 +29,7 @@
     },
     "uninstaller": {
         "script": [
-            "Import-Module $(Join-Path $(Find-BucketDirectory -Root -Name dorado) scripts/Utils.psm1)",
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
             "Dismount-ExternalRuntimeData -Target \"$env:LOCALAPPDATA\\Netease\\MailMaster\"",
             "Remove-Module -Name Utils"
         ]
