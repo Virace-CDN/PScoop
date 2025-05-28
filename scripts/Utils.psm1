@@ -101,7 +101,7 @@ function Get-DumplingsInstallerInfo {
         $result = @{}
 
         # 设置版本号，优先使用 RealVersion（如果存在）
-        if ($installerInfo.RealVersion) {
+        if ($installerInfo.PSObject.Properties.Name -contains "RealVersion" -and $installerInfo.RealVersion) {
             $result.Version = $installerInfo.RealVersion
             Write-Verbose "使用 RealVersion: $($installerInfo.RealVersion)"
         } else {
