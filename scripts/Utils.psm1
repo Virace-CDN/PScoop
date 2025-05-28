@@ -100,8 +100,23 @@ function Get-DumplingsInstallerInfo {
         # 创建结果对象
         $result = @{}
 
+        # 添加调试信息
+        Write-Verbose "对象类型: $($installerInfo.GetType().FullName)"
+        Write-Verbose "所有属性: $($installerInfo.PSObject.Properties.Name -join ', ')"
+
+        # 根据对象类型选择不同的检查方法
+        $hasRealVersion = if ($installerInfo -is [hashtable] -or $installerInfo -is [System.Collections.IDictionary]) {
+            $installerInfo.ContainsKey("RealVersion")
+        } else {
+            $installerInfo.PSObject.Properties.Name -contains "RealVersion"
+        }
+
+        Write-Verbose "RealVersion存在: $hasRealVersion"
+        Write-Verbose "RealVersion值: $($installerInfo.RealVersion)"
+        Write-Verbose "Version值: $($installerInfo.Version)"
+
         # 设置版本号，优先使用 RealVersion（如果存在）
-        if ($installerInfo.PSObject.Properties.Name -contains "RealVersion" -and $installerInfo.RealVersion) {
+        if ($hasRealVersion -and $installerInfo.RealVersion) {
             $result.Version = $installerInfo.RealVersion
             Write-Verbose "使用 RealVersion: $($installerInfo.RealVersion)"
         } else {
