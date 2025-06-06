@@ -22,7 +22,6 @@
     },
     "installer": {
         "script": [
-            "Remove-Item \"$dir\\*\" -Exclude 'Chrome-bin' -Force -Recurse",
             "Move-Item \"$dir\\Chrome-bin\\*\" \"$dir\" -Force",
             "Remove-Item \"$dir\\Chrome-bin\" -Force -Recurse"
         ]
