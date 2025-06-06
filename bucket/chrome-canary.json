@@ -21,7 +21,11 @@
         }
     },
     "installer": {
-        "script": "Expand-7zipArchive \"$dir\\chrome.7z\" -ExtractDir 'Chrome-bin' -Removal"
+        "script": [
+            "Remove-Item \"$dir\\*\" -Exclude 'Chrome-bin' -Force -Recurse",
+            "Move-Item \"$dir\\Chrome-bin\\*\" \"$dir\" -Force",
+            "Remove-Item \"$dir\\Chrome-bin\" -Force -Recurse"
+        ]
     },
     "bin": [
         [
