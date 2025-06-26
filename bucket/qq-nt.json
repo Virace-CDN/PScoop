@@ -1,5 +1,5 @@
 {
-    "version": "9.9.20.36330",
+    "version": "9.9.20.36580",
     "description": "An instant messaging software service developed by Tencent",
     "homepage": "https://im.qq.com/pcqq/index.shtml",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.20_250616_x64_01.exe#/dl.7z",
-            "hash": "fa77bc3328820c6185a3dee438b48193c0df3e811f4610a2aff27b7d0ea2e9b5"
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.20_250626_x64_01.exe#/dl.7z",
+            "hash": "97b99108b5be55fd9ebfca9d825b584450f3fd2fc7a96f7ace0587bbcba5cfd7"
         }
     },
     "extract_dir": "Files",
