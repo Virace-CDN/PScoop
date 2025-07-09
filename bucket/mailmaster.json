@@ -50,6 +50,7 @@
             "$headers = @{ 'Content-Type' = 'application/json' }",
             "$body = '{\"app_ver\":50000000000,\"appid\":10,\"channel\":\"\",\"deviceInfo\":{\"appId\":\"10\",\"appSubVersion\":\"\",\"appVersion\":\"\",\"channel\":\"\",\"deviceId\":\"x\",\"language\":\"zh\",\"osType\":\"x\",\"osVersion\":\"10\",\"sign\":\"\",\"systemName\":\"\"},\"isManual\":true}'",
             "$response = Invoke-RestMethod -Uri 'https://appconf.mail.163.com/mailmaster/api/app/update.do' -Method POST -Headers $headers -Body $body",
+            "Write-Verbose \"响应内容: $response\"",
             "$version = $response.data.original.ver",
             "$hash = $response.data.original.md5",
             "Write-Output \"$version|$hash\""
