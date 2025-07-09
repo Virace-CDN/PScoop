@@ -1,5 +1,5 @@
 {
-    "version": "4.0.6.17",
+    "version": "4.0.6.21",
     "description": "Free messaging and calling app by Tencent",
     "homepage": "https://pc.weixin.qq.com/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe#/dl.7z",
-            "hash": "194d920a42eb8ea160825bac2d241ef7c39183f5c0e4e015cf7f215ba9155829"
+            "url": "https://github.com/cscnk52/wechat-windows-versions/releases/download/v4.0.6.21/weixin_4.0.6.21.exe#/dl.7z",
+            "hash": "eebcd43ccbc9b4d0d06ce3b90e203b9f6bf55349771e6422620b9e40687ccb5c"
         }
     },
     "pre_install": [
@@ -42,24 +42,12 @@
         ]
     },
     "checkver": {
-        "script": [
-            "$baseUrl = 'https://github.com/SpecterShell/Dumplings/raw/refs/heads/main/Tasks/Tencent.WeChat.Universal/'",
-            "$linkUrl = $baseUrl + 'State.yaml'",
-            "$symlink = Invoke-WebRequest -UseBasicParsing -Uri $linkUrl",
-            "$targetFile = $symlink.Content.Trim()",
-            "$content = Invoke-WebRequest -UseBasicParsing -Uri \"$baseUrl$targetFile\"",
-            "Write-Output $content.Content"
-        ],
-        "regex": "Version: ([\\d.]+)"
+        "github": "https://github.com/cscnk52/wechat-windows-versions"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe#/dl.7z",
-                "hash": {
-                    "url": "https://github.com/microsoft/winget-pkgs/raw/refs/heads/master/manifests/t/Tencent/WeChat/Universal/$version/Tencent.WeChat.Universal.installer.yaml",
-                    "regex": "InstallerSha256:\\s+([a-fA-F0-9]{64})"
-                }
+                "url": "https://github.com/cscnk52/wechat-windows-versions/releases/download/v$version/weixin_$version.exe#/dl.7z"
             }
         }
     }
