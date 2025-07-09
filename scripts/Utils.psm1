@@ -112,7 +112,9 @@ function Get-DumplingsInstallerInfo {
         }
 
         Write-Verbose "RealVersion存在: $hasRealVersion"
-        Write-Verbose "RealVersion值: $($installerInfo.RealVersion)"
+        if ($hasRealVersion) {
+            Write-Verbose "RealVersion值: $($installerInfo.RealVersion)"
+        }
         Write-Verbose "Version值: $($installerInfo.Version)"
 
         # 设置版本号，优先使用 RealVersion（如果存在）
