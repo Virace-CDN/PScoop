@@ -1,0 +1,40 @@
+{
+    "version": "1.5.6",
+    "description": "淘宝PC客户端淘宝桌面版购物助手，海量商品高效选购，AI对话无限畅聊，让网购省心又超值！",
+    "homepage": "https://pc.taobao.com/",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://tblifecdn.taobao.com/taobaopc/shop/taobao-setup-win-x64-1.5.6.exe#/dl.7z",
+            "hash": "8c37d4f29782f6f38e4f7a49e02a61b02a7c47dbcb1ef55152aac1890a576b9f"
+        }
+    },
+    "installer": {
+        "script": [
+
+            "Expand-7ZipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\" -Removal",
+            "Remove-Item \"$dir\\`$PLUGINSDIR\",\"$dir\\`$R0\"  -Force -Recurse",
+            "Remove-Item  \"$dir\\resources\\nsis\\safe\" -Force -Recurse",
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
+            "Mount-ExternalRuntimeData -Source \"$persist_dir\\AppData\" -Target \"$env:APPDATA\\taobao\"",
+            "Remove-Module -Name Utils"
+        ]
+    },
+    "shortcuts": [
+        [
+            "淘宝桌面版.exe",
+            "淘宝"
+        ]
+    ],
+    "checkver": {
+        "url": "https://pc.taobao.com/",
+        "regex": "lastedVersion\":\"(\\d+\\.\\d+\\.\\d+)\""
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://tblifecdn.taobao.com/taobaopc/shop/taobao-setup-win-x64-$version.exe#/dl.7z"
+            }
+        }
+    }
+}
