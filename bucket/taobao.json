@@ -1,17 +1,16 @@
 {
-    "version": "1.5.6",
+    "version": "1.6.0",
     "description": "淘宝PC客户端淘宝桌面版购物助手，海量商品高效选购，AI对话无限畅聊，让网购省心又超值！",
     "homepage": "https://pc.taobao.com/",
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://tblifecdn.taobao.com/taobaopc/shop/taobao-setup-win-x64-1.5.6.exe#/dl.7z",
-            "hash": "8c37d4f29782f6f38e4f7a49e02a61b02a7c47dbcb1ef55152aac1890a576b9f"
+            "url": "https://tblifecdn.taobao.com/taobaopc/shop/taobao-setup-win-x64-1.6.0.exe#/dl.7z",
+            "hash": "178af8f2c1a58608b81033fcdc860092775d787dd45733afaa407569d2454196"
         }
     },
     "installer": {
         "script": [
-
             "Expand-7ZipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\" -Removal",
             "Remove-Item \"$dir\\`$PLUGINSDIR\",\"$dir\\`$R0\"  -Force -Recurse",
             "Remove-Item  \"$dir\\resources\\nsis\\safe\" -Force -Recurse",
