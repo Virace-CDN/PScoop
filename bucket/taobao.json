@@ -1,12 +1,12 @@
 {
-    "version": "1.6.0",
+    "version": "1.7.0",
     "description": "淘宝PC客户端淘宝桌面版购物助手，海量商品高效选购，AI对话无限畅聊，让网购省心又超值！",
     "homepage": "https://pc.taobao.com/",
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://tblifecdn.taobao.com/taobaopc/shop/taobao-setup-win-x64-1.6.0.exe#/dl.7z",
-            "hash": "178af8f2c1a58608b81033fcdc860092775d787dd45733afaa407569d2454196"
+            "url": "https://tblifecdn.taobao.com/taobaopc/shop/taobao-setup-win-x64-1.7.0.exe#/dl.7z",
+            "hash": "b9c087e9bd39db02476d3383abadec5e7dbc53670acd46e2ff6a478d118e8ede"
         }
     },
     "installer": {
