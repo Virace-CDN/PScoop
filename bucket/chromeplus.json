@@ -1,12 +1,12 @@
 {
-    "version": "1.13.0",
+    "version": "1.13.1",
     "description": "Chrome++ plugin",
     "homepage": "https://github.com/Bush2021/chrome_plus",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Bush2021/chrome_plus/releases/download/1.13.0/Chrome++_v1.13.0_x86_x64_arm64.7z",
-            "hash": "8e5c00acd2be257bf3306c7de5ee35b93afbefe4a7ba320ac1ab0c5981c8e68e"
+            "url": "https://github.com/Bush2021/chrome_plus/releases/download/1.13.1/Chrome++_v1.13.1_x86_x64_arm64.7z",
+            "hash": "06666d69b861fa9245df1d4a43cae6ad06e3550295a8a4516d79c68e85b16a3f"
         }
     },
     "extract_dir": "x64",
