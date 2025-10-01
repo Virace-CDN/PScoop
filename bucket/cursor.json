@@ -1,13 +1,13 @@
 {
-    "version": "1.7.25",
+    "version": "1.7.28",
     "description": "An AI code editor",
     "homepage": "https://www.cursor.com/",
     "license": "freeware",
     "depends": "main/innounp",
     "architecture": {
         "64bit": {
-            "url": "https://downloads.cursor.com/production/429604585b94ab2b96a4dabff4660f41d5b7fb8f/win32/x64/user-setup/CursorUserSetup-x64-1.7.25.exe",
-            "hash": "0389d41af4585580e357adf1acfeef9beecc97925c17fe15f0a7a607cf84faf8"
+            "url": "https://downloads.cursor.com/production/adb0f9e3e4f184bba7f3fa6dbfd72ad0ebb8cfd8/win32/x64/user-setup/CursorUserSetup-x64-1.7.28.exe",
+            "hash": "387b67683869248a32dbb164ea0c2bdd58d5f34237006248491bb3a2f542cba2"
         }
     },
     "pre_install": [
