@@ -1,11 +1,11 @@
 {
     "##": "抖音",
-    "version": "6.7.0",
+    "version": "6.8.1",
     "description": "Douyin PC Client",
     "homepage": "https://www.douyin.com/",
     "license": "Freeware",
-    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/237387207/6.7.0/win32-x64/douyin-v6.7.0-win32-x64-default.exe#/dl.7z",
-    "hash": "83164611a1a262ab5ef81bc85bf7361df24a0d5b3985a4a5f5613fd7c7c9bf6f",
+    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/249921704/6.8.1/win32-x64/douyin-v6.8.1-win32-x64-default.exe#/dl.7z",
+    "hash": "8350cf4322b220cefbdbcdd8ae6034707af03dc89f09e46c8072a21b9eab8e44",
     "installer": {
         "script": [
             "Remove-Item \"$dir\\*\" -Exclude 'app.7z' -Force -Recurse",
