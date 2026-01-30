@@ -1,0 +1,26 @@
+{
+    "version": "0.1.0",
+    "description": "High-performance batch file hashing tool (fhash).",
+    "homepage": "https://github.com/Virace/fast-hasher",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Virace/fast-hasher/releases/download/v0.1.0/fhash-windows-amd64.exe",
+            "hash": "724fa3e13a949ba074e7f8b1f762e2a0e0de8a141ac1a8e8147026ccc83f3b0a"
+        }
+    },
+    "bin": [
+        [
+            "fhash-windows-amd64.exe",
+            "fhash"
+        ]
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Virace/fast-hasher/releases/download/v$version/fhash-windows-amd64.exe"
+            }
+        }
+    }
+}
