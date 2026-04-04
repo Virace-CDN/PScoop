@@ -1,11 +1,11 @@
 {
     "##": "抖音",
-    "version": "6.8.1",
+    "version": "7.6.0",
     "description": "Douyin PC Client",
     "homepage": "https://www.douyin.com/",
     "license": "Freeware",
-    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/249921704/6.8.1/win32-x64/douyin-v6.8.1-win32-x64-default.exe#/dl.7z",
-    "hash": "8350cf4322b220cefbdbcdd8ae6034707af03dc89f09e46c8072a21b9eab8e44",
+    "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/335297983/7.6.0/win32-x64/douyin-v7.6.0-win32-x64-default.exe#/dl.7z",
+    "hash": "6035111a2902f7e84f17ee572e4c2dfada8c51b7f7d9d55bc177921081a82de2",
     "installer": {
         "script": [
             "Remove-Item \"$dir\\*\" -Exclude 'app.7z' -Force -Recurse",
@@ -34,13 +34,12 @@
     "persist": "UserData",
     "checkver": {
         "script": [
-            "$response = Invoke-RestMethod -Uri 'https://api.toutiaoapi.com/service/settings/v3/?app=1&aid=430651&app_arch=x86_64&arch_info=x86_64&auto_update_x64=1&auto_update_x64_memory_threshold_gb=8&cpu_processor_count=32&device_platform=pc&from_aid=6383&from_channel&from_version=5.0.1&physical_menory=65452&sys_name=Windows_NT&sys_version=10.0.26100&version_code=0.0.0' -Method GET",
-            "$version = $response.data.settings.douyin_pc_update.version",
-            "$url = $response.data.settings.douyin_pc_update.url",
-            "$md5 = $response.data.settings.douyin_pc_update.md5",
-            "Write-Output \"$version|$url|$md5\""
+            "Import-Module \".\\scripts\\Utils.psm1\"",
+            "$data = Get-DumplingsInstallerInfo -AppId \"ByteDance.Douyin\"",
+            "\"ver:$($data.Version);\"",
+            "\"url:$($data.x64);\""
         ],
-        "regex": "^(?<version>[\\d.]+)\\|(?<url>https?://[\\S]+)\\|(?<md5>[a-fA-F0-9]+)$"
+        "regex": "ver:(?<version>.+?); url:(?<url>.+?);"
     },
     "autoupdate": {
         "url": "$matchUrl#/dl.7z"
