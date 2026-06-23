@@ -1,13 +1,13 @@
 {
-    "version": "3.8.11",
+    "version": "3.8.22",
     "description": "An AI code editor",
     "homepage": "https://www.cursor.com/",
     "license": "freeware",
     "depends": "main/innounp",
     "architecture": {
         "64bit": {
-            "url": "https://downloads.cursor.com/production/e56ad3440df06d22ca7501e65fd518e905486ef7/win32/x64/user-setup/CursorUserSetup-x64-3.8.11.exe",
-            "hash": "8624437fd7d3741252209be2a86a50e5c30a467ba5c1cd5c7713c91bb30a9905"
+            "url": "https://downloads.cursor.com/production/46fb7aafe279d7c72346febe68c2e004b7d1de6e/win32/x64/user-setup/CursorUserSetup-x64-3.8.22.exe",
+            "hash": "b6974d7c89ac75d33b4efcc452b50c8dc3354a3aabc5ea12dc2f844c6327ebb0"
         }
     },
     "pre_install": [
