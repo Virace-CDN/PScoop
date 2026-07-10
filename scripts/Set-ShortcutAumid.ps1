@@ -49,15 +49,15 @@ if (-not (Test-Path $ShortcutPath)) {
 
 $shell = New-Object -ComObject WScript.Shell
 $lnk = $shell.CreateShortcut($ShortcutPath)
-if ($TargetPath) { $lnk.TargetPath = $TargetPath }
-if ($PSBoundParameters.ContainsKey('Arguments')) { $lnk.Arguments = $Arguments }
-if ($WorkingDirectory) { $lnk.WorkingDirectory = $WorkingDirectory }
-if ($IconLocation) { $lnk.IconLocation = $IconLocation }
-$lnk.Save()
+
+$desiredTarget = if ($TargetPath) { $TargetPath } else { $lnk.TargetPath }
+$desiredArgs = if ($PSBoundParameters.ContainsKey('Arguments')) { $Arguments } else { $lnk.Arguments }
+$desiredWorkDir = if ($WorkingDirectory) { $WorkingDirectory } else { $lnk.WorkingDirectory }
+$desiredIcon = if ($IconLocation) { $IconLocation } else { $lnk.IconLocation }
 
 if (-not $AppUserModelID) {
     # 复刻 chrome_plus src/appid.cc:FNV-1a 64bit,输入为 exe 目录路径的 UTF-16LE 字节
-    $exeDir = Split-Path -Parent $lnk.TargetPath
+    $exeDir = Split-Path -Parent $desiredTarget
     $mask = [System.Numerics.BigInteger]::Parse('FFFFFFFFFFFFFFFF', 'AllowHexSpecifier')
     $hash = [System.Numerics.BigInteger]::Parse('14695981039346656037')
     $prime = [System.Numerics.BigInteger]::Parse('1099511628211')
@@ -91,11 +91,40 @@ public static class LnkAumid
     [StructLayout(LayoutKind.Sequential)]
     struct PROPERTYKEY { public Guid fmtid; public uint pid; }
 
-    [StructLayout(LayoutKind.Explicit)]
+    // 真实 PROPVARIANT 在 x64 上为 24 字节(vt + 3 个保留 ushort + 16 字节联合体);
+    // Size 不足时 GetValue 会越界写入导致未定义行为(读取结果随进程随机为空)。
+    [StructLayout(LayoutKind.Explicit, Size = 24)]
     struct PROPVARIANT
     {
         [FieldOffset(0)] public ushort vt;
         [FieldOffset(8)] public IntPtr pointerValue;
+        [FieldOffset(16)] public IntPtr reserved;
+    }
+
+    static PROPERTYKEY AumidKey()
+    {
+        return new PROPERTYKEY { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 5 };
+    }
+
+    public static string Get(string lnkPath)
+    {
+        Guid iid = typeof(IPropertyStore).GUID;
+        IPropertyStore store;
+        int hr = SHGetPropertyStoreFromParsingName(lnkPath, IntPtr.Zero, 0 /* GPS_DEFAULT */, ref iid, out store);
+        if (hr != 0) return null;
+        try
+        {
+            PROPERTYKEY key = AumidKey();
+            PROPVARIANT pv;
+            store.GetValue(ref key, out pv);
+            if (pv.vt == 31 && pv.pointerValue != IntPtr.Zero)
+                return Marshal.PtrToStringUni(pv.pointerValue);
+            return null;
+        }
+        finally
+        {
+            Marshal.ReleaseComObject(store);
+        }
     }
 
     public static void Set(string lnkPath, string aumid)
@@ -104,7 +133,7 @@ public static class LnkAumid
         IPropertyStore store;
         int hr = SHGetPropertyStoreFromParsingName(lnkPath, IntPtr.Zero, 2 /* GPS_READWRITE */, ref iid, out store);
         if (hr != 0) Marshal.ThrowExceptionForHR(hr);
-        PROPERTYKEY key = new PROPERTYKEY { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 5 };
+        PROPERTYKEY key = AumidKey();
         PROPVARIANT pv = new PROPVARIANT { vt = 31 /* VT_LPWSTR */, pointerValue = Marshal.StringToCoTaskMemUni(aumid) };
         try
         {
@@ -123,5 +152,22 @@ public static class LnkAumid
 "@
 }
 
+# 内容已全部正确时绝不写文件:explorer 会在下次同步任务栏时丢弃被改写过的固定项,
+# 稳态下(目标 current + AUMID 恒定)每次升级都不应产生任何写入。
+$currentAumid = [LnkAumid]::Get($ShortcutPath)
+if (($lnk.TargetPath -eq $desiredTarget) -and
+    ($lnk.Arguments -eq $desiredArgs) -and
+    ($lnk.WorkingDirectory -eq $desiredWorkDir) -and
+    ($lnk.IconLocation -eq $desiredIcon) -and
+    ($currentAumid -eq $AppUserModelID)) {
+    Write-Host "无需变更 $(Split-Path -Leaf $ShortcutPath)(AUMID: $AppUserModelID)"
+    return
+}
+
+$lnk.TargetPath = $desiredTarget
+$lnk.Arguments = $desiredArgs
+$lnk.WorkingDirectory = $desiredWorkDir
+if ($desiredIcon) { $lnk.IconLocation = $desiredIcon }
+$lnk.Save()
 [LnkAumid]::Set($ShortcutPath, $AppUserModelID)
 Write-Host "已更新 $(Split-Path -Leaf $ShortcutPath) -> AUMID: $AppUserModelID"

@@ -60,7 +60,7 @@
         "if (Test-Path $taskbar_lnk) {",
         "    & $fix_lnk -ShortcutPath $taskbar_lnk -TargetPath \"$current_dir\\chrome.exe\" -WorkingDirectory $current_dir -IconLocation $chrome_icon -Arguments ('--user-data-dir=\"{0}\\User Data\"' -f $current_dir)",
         "} else {",
-        "    powershell -NoProfile -File \"$bucketsdir\\pscoop\\scripts\\Request-TaskbarPin.ps1\" -AppDir $current_dir",
+        "    powershell -NoProfile -Sta -File \"$bucketsdir\\pscoop\\scripts\\Request-TaskbarPin.ps1\" -AppDir $current_dir",
         "}"
     ],
     "env_set": {
