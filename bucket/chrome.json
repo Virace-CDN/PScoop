@@ -3,8 +3,7 @@
     "description": "Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/chrome/",
     "depends": [
-        "pscoop/chromeplus",
-        "pscoop/syspin"
+        "pscoop/chromeplus"
     ],
     "license": {
         "identifier": "Freeware",
@@ -53,15 +52,15 @@
         "$content = $content -replace \"{{DATA_DIR}}\", $actual_data_dir",
         "$content = $content -replace \"{{CACHE_DIR}}\", $actual_cache_dir",
         "Set-Content -Path $iniPath -Value $content",
-        "$chrome_shortcut = \"$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\Google Chrome.lnk\"",
-        "echo $chrome_shortcut",
-        "if (Test-Path $chrome_shortcut) {",
-        "    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($chrome_shortcut)",
-        "    $shortcut.TargetPath = \"$original_dir\\chrome.exe\"",
-        "    $shortcut.WorkingDirectory = \"$original_dir\"",
-        "    $shortcut.Save()",
+        "$current_dir = Join-Path (Split-Path $dir -Parent) 'current'",
+        "$fix_lnk = \"$bucketsdir\\pscoop\\scripts\\Set-ShortcutAumid.ps1\"",
+        "$chrome_icon = \"$current_dir\\chrome.exe,0\"",
+        "& $fix_lnk -ShortcutPath \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Scoop Apps\\Google Chrome.lnk\" -IconLocation $chrome_icon",
+        "$taskbar_lnk = \"$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\Google Chrome.lnk\"",
+        "if (Test-Path $taskbar_lnk) {",
+        "    & $fix_lnk -ShortcutPath $taskbar_lnk -TargetPath \"$current_dir\\chrome.exe\" -WorkingDirectory $current_dir -IconLocation $chrome_icon -Arguments ('--user-data-dir=\"{0}\\User Data\"' -f $current_dir)",
         "} else {",
-        "    syspin \"$original_dir\\chrome.exe\" 5386",
+        "    powershell -NoProfile -File \"$bucketsdir\\pscoop\\scripts\\Request-TaskbarPin.ps1\" -AppDir $current_dir",
         "}"
     ],
     "env_set": {

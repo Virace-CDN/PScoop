@@ -3,8 +3,7 @@
     "description": "Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/chrome/beta",
     "depends": [
-        "pscoop/chromeplus",
-        "pscoop/syspin"
+        "pscoop/chromeplus"
     ],
     "license": {
         "identifier": "Freeware",
@@ -62,24 +61,15 @@
         "    Copy-Item \"$chromeplus_dir\\App\\version.dll\" \"$dir\"",
         "    Copy-Item \"$chromeplus_dir\\App\\chrome++.ini\" \"$dir\"",
         "}",
-        "$original_dir = \"$original_dir\"",
-        "$quick_launch_path = \"$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\"",
-        "$beta_shortcut = Join-Path $quick_launch_path 'Google Chrome Beta.lnk'",
-        "if (Test-Path $beta_shortcut) {",
-        "    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($beta_shortcut)",
-        "    $shortcut.TargetPath = \"$original_dir\\chrome.exe\"",
-        "    $shortcut.WorkingDirectory = \"$original_dir\"",
-        "    $shortcut.IconLocation = \"$original_dir\\chrome.exe,9\"",
-        "    $shortcut.Save()",
+        "$current_dir = Join-Path (Split-Path $dir -Parent) 'current'",
+        "$fix_lnk = \"$bucketsdir\\pscoop\\scripts\\Set-ShortcutAumid.ps1\"",
+        "$beta_icon = \"$current_dir\\chrome.exe,9\"",
+        "& $fix_lnk -ShortcutPath \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Scoop Apps\\Google Chrome (Beta).lnk\" -IconLocation $beta_icon",
+        "$taskbar_lnk = \"$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\Google Chrome (Beta).lnk\"",
+        "if (Test-Path $taskbar_lnk) {",
+        "    & $fix_lnk -ShortcutPath $taskbar_lnk -TargetPath \"$current_dir\\chrome.exe\" -WorkingDirectory $current_dir -IconLocation $beta_icon -Arguments ('--user-data-dir=\"{0}\\User Data\"' -f $current_dir)",
         "} else {",
-        "    $temp_shortcut = \"$dir\\Google Chrome Beta.lnk\"",
-        "    $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($temp_shortcut)",
-        "    $shortcut.TargetPath = \"$original_dir\\chrome.exe\"",
-        "    $shortcut.WorkingDirectory = \"$original_dir\"",
-        "    $shortcut.IconLocation = \"$original_dir\\chrome.exe,9\"",
-        "    $shortcut.Save()",
-        "    syspin $temp_shortcut 5386",
-        "    Remove-Item $temp_shortcut",
+        "    powershell -NoProfile -File \"$bucketsdir\\pscoop\\scripts\\Request-TaskbarPin.ps1\" -AppDir $current_dir",
         "}"
     ],
     "env_set": {
