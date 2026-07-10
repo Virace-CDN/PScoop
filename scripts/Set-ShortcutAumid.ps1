@@ -68,12 +68,15 @@ if (-not $AppUserModelID) {
     $AppUserModelID = 'ChromePlusNext.' + $hex.Substring($hex.Length - 16)
 }
 
-if (-not ([System.Management.Automation.PSTypeName]'LnkAumid').Type) {
-    Add-Type -TypeDefinition @"
+# Add-Type 的类型名按源码内容哈希唯一化:scoop 的 post_install 进程里可能已残留
+# 本会话早前版本的同名类型,固定名 + 守卫会跳过重新 Add-Type 而用到缺方法的旧类
+# (曾导致 "[LnkAumid] does not contain a method named 'Get'")。内容变了名字就变,
+# 绝不撞旧类型;内容不变则同进程内复用(只编译一次)。
+$lnkAumidSrc = @'
 using System;
 using System.Runtime.InteropServices;
 
-public static class LnkAumid
+public static class __LNKAUMID__
 {
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
     static extern int SHGetPropertyStoreFromParsingName(string path, IntPtr zone, uint flags, ref Guid iid, [Out, MarshalAs(UnmanagedType.Interface)] out IPropertyStore store);
@@ -149,12 +152,19 @@ public static class LnkAumid
         }
     }
 }
-"@
+'@
+
+$sha1 = [System.Security.Cryptography.SHA1]::Create()
+$hashHex = [System.BitConverter]::ToString($sha1.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($lnkAumidSrc))) -replace '-', ''
+$lnkAumidType = 'LnkAumid_' + $hashHex.Substring(0, 12).ToLower()
+if (-not ([System.Management.Automation.PSTypeName]$lnkAumidType).Type) {
+    Add-Type -TypeDefinition $lnkAumidSrc.Replace('__LNKAUMID__', $lnkAumidType)
 }
+$lnkT = [type]$lnkAumidType
 
 # 内容已全部正确时绝不写文件:explorer 会在下次同步任务栏时丢弃被改写过的固定项,
 # 稳态下(目标 current + AUMID 恒定)每次升级都不应产生任何写入。
-$currentAumid = [LnkAumid]::Get($ShortcutPath)
+$currentAumid = $lnkT::Get($ShortcutPath)
 if (($lnk.TargetPath -eq $desiredTarget) -and
     ($lnk.Arguments -eq $desiredArgs) -and
     ($lnk.WorkingDirectory -eq $desiredWorkDir) -and
@@ -169,5 +179,5 @@ $lnk.Arguments = $desiredArgs
 $lnk.WorkingDirectory = $desiredWorkDir
 if ($desiredIcon) { $lnk.IconLocation = $desiredIcon }
 $lnk.Save()
-[LnkAumid]::Set($ShortcutPath, $AppUserModelID)
+$lnkT::Set($ShortcutPath, $AppUserModelID)
 Write-Host "已更新 $(Split-Path -Leaf $ShortcutPath) -> AUMID: $AppUserModelID"
