@@ -60,8 +60,10 @@ public static class PinNative {
     [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
+    [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr h);
     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int cmd);
     [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint a, uint b, bool attach);
+    [DllImport("user32.dll")] public static extern IntPtr SetActiveWindow(IntPtr h);
     [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
     // 在前台锁定下也尽量把自己的窗口抬到前台:临时挂接当前前台线程输入队列
     public static void ForceForeground(IntPtr h) {
@@ -70,9 +72,12 @@ public static class PinNative {
         uint cur = GetCurrentThreadId();
         if (fgThread != cur) AttachThreadInput(cur, fgThread, true);
         ShowWindow(h, 5); // SW_SHOW
+        BringWindowToTop(h);
         SetForegroundWindow(h);
+        SetActiveWindow(h);
         if (fgThread != cur) AttachThreadInput(cur, fgThread, false);
     }
+    public static bool IsForeground(IntPtr h) { return GetForegroundWindow() == h; }
 }
 "@
 
@@ -88,10 +93,6 @@ public static class PinNative {
     $form.TopMost = $true
     $form.Add_Shown({ [PinNative]::ForceForeground($form.Handle) })
     $form.Show()
-    for ($i = 0; $i -lt 12; $i++) { [System.Windows.Forms.Application]::DoEvents(); Start-Sleep -Milliseconds 100 }
-    [PinNative]::ForceForeground($form.Handle)
-    [System.Windows.Forms.Application]::DoEvents()
-    Start-Sleep -Milliseconds 300
 
     $null = [Windows.UI.Shell.TaskbarManager, Windows.UI.Shell, ContentType = WindowsRuntime]
     Add-Type -AssemblyName System.Runtime.WindowsRuntime
@@ -122,9 +123,19 @@ public static class PinNative {
         return
     }
 
-    if (-not $tm.IsPinningAllowed) {
-        Write-Host "任务栏固定暂不可用(IsPinningAllowed=False)。"
-        Write-Host '常见原因:组策略禁止固定;可稍后手动固定:启动应用后右键任务栏图标选择固定。'
+    # IsPinningAllowed 要求调用进程持有前台窗口;SetForegroundWindow 有竞态,
+    # 反复抢前台并轮询,直到真正拿到前台+可固定,或超时放弃(不阻塞安装)。
+    $allowed = $false
+    $deadline = (Get-Date).AddSeconds(10)
+    while ((Get-Date) -lt $deadline) {
+        [PinNative]::ForceForeground($form.Handle)
+        [System.Windows.Forms.Application]::DoEvents()
+        Start-Sleep -Milliseconds 200
+        if ([PinNative]::IsForeground($form.Handle) -and $tm.IsPinningAllowed) { $allowed = $true; break }
+    }
+    if (-not $allowed) {
+        Write-Host "任务栏固定暂不可用(未能取得前台或被策略禁止)。"
+        Write-Host '可稍后手动固定:启动应用后右键任务栏图标选择固定。'
         return
     }
 
