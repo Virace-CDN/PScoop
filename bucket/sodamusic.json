@@ -1,0 +1,74 @@
+{
+    "##": "汽水音乐",
+    "version": "3.6.0",
+    "description": "Official music app by Douyin.",
+    "homepage": "https://www.qishui.com/",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://luna-web.douyin.com/terms"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://lf-luna-release.qishui.com/obj/luna-release/3.6.0/424921879/SodaMusic-v3.6.0-official-win32_x64.exe#/dl.7z",
+            "hash": "7d994ff28309f5e21c284e71c03de06ce9c9aa936eded892d79eb64b48a1f18e"
+        },
+        "32bit": {
+            "url": "https://lf-luna-release.qishui.com/obj/luna-release/3.6.0/424921879/SodaMusic-v3.6.0-official-win32_ia32.exe#/dl.7z",
+            "hash": "932e864d2dac3b330871aa900f27ef285e77667698362307ed0753d6a8dc4570"
+        }
+    },
+    "installer": {
+        "script": [
+            "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\unins000.exe\" -Force -Recurse",
+            "Expand-7zipArchive \"$dir\\`$_31_\\`$_31_\\app.7z\" \"$dir\\$version\" -Removal",
+            "Remove-Item \"$dir\\`$_31_\", \"$dir\\$version\\unins000.exe\" -Force -Recurse -ErrorAction SilentlyContinue",
+            "Copy-Item \"$dir\\$version\\SodaMusicLauncher.backup\" \"$dir\\SodaMusicLauncher.exe\" -Force",
+            "Copy-Item \"$dir\\$version\\launcher_config.json\" \"$dir\\launcher_config.json\" -Force",
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
+            "Mount-ExternalRuntimeData -Source \"$persist_dir\\UserData\" -Target \"$env:APPDATA\\SodaMusic\"",
+            "Remove-Module -Name Utils"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "Import-Module \"$bucketsdir\\pscoop\\scripts\\Utils.psm1\"",
+            "Dismount-ExternalRuntimeData -Target \"$env:APPDATA\\SodaMusic\"",
+            "Remove-Module -Name Utils"
+        ]
+    },
+    "shortcuts": [
+        [
+            "SodaMusicLauncher.exe",
+            "汽水音乐"
+        ]
+    ],
+    "persist": "UserData",
+    "checkver": {
+        "script": [
+            "Import-Module \".\\scripts\\Utils.psm1\"",
+            "$data = Get-DumplingsInstallerInfo -AppId \"ByteDance.SodaMusic\"",
+            "\"ver:$($data.Version);\"",
+            "\"x86:$($data.x86);\"",
+            "\"x64:$($data.x64);\""
+        ],
+        "regex": "ver:(?<version>.+?); x86:(?<x86>.+?); x64:(?<x64>.+?);"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.7z",
+                "hash": {
+                    "url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/b/ByteDance/SodaMusic/$version/ByteDance.SodaMusic.installer.yaml",
+                    "regex": "Architecture: x64[\\s\\S]+?InstallerSha256:\\s?(.+)"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86#/dl.7z",
+                "hash": {
+                    "url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/b/ByteDance/SodaMusic/$version/ByteDance.SodaMusic.installer.yaml",
+                    "regex": "Architecture: x86[\\s\\S]+?InstallerSha256:\\s?(.+)"
+                }
+            }
+        }
+    }
+}
