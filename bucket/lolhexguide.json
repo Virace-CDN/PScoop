@@ -1,0 +1,98 @@
+{
+    "version": "00.00.00.40",
+    "description": "虎牙英雄联盟助手（独立运行，无需安装虎牙客户端）。",
+    "homepage": "https://www.huya.com/",
+    "license": "Proprietary",
+    "architecture": {
+        "64bit": {
+            "url": "https://download.huya.com/lolhexguide/00.00.00.40/lolhexguide_00.00.00.40.7z",
+            "hash": "md5:a667ce6b0c1e55358ae7fcc9077521dd"
+        }
+    },
+    "pre_install": [
+        "$ErrorActionPreference = 'Stop'",
+        "if ($global) { throw 'lolhexguide 仅支持当前用户安装。' }",
+        "if (Get-Process lolhexguide, GameBoxServer -ErrorAction SilentlyContinue) { throw '请先退出英雄联盟助手及 GameBoxServer。' }",
+        "if (!(Test-Path \"$dir\\lolhexguide.exe\") -or !(Test-Path \"$dir\\GameBoxServer.exe\")) { throw '官方压缩包布局已改变：缺少助手或后台入口。' }",
+        "$repo = if ($url -and (Test-Path -LiteralPath $url -PathType Leaf)) { Split-Path (Split-Path $url) } elseif ($bucket) { Join-Path $bucketsdir $bucket } else { throw '无法确定清单所在仓库。' }",
+        "$launcher = Join-Path $repo 'third-party\\HuyaLolLauncher.exe'",
+        "if ((Get-FileHash -LiteralPath $launcher -Algorithm SHA256).Hash -ne 'b4150db8b09c0cb637f745c232bc63fb1b975b15b5b915053296b2f7601799bc') { throw '启动器 SHA256 校验失败。' }",
+        "Copy-Item -LiteralPath $launcher -Destination \"$dir\\HuyaLolLauncher.exe\"",
+        "Copy-Item -LiteralPath (Join-Path $repo 'scripts\\Utils.psm1') -Destination \"$dir\\scoop-utils.psm1\""
+    ],
+    "post_install": [
+        "$ErrorActionPreference = 'Stop'",
+        "if (Get-Process lolhexguide, GameBoxServer -ErrorAction SilentlyContinue) { throw '请先退出英雄联盟助手及 GameBoxServer。' }",
+        "Import-Module \"$dir\\scoop-utils.psm1\" -Force",
+        "try {",
+        "    foreach ($name in @('lolBox', 'lolhexguide', 'lolBoxLaunch')) {",
+        "        Mount-ExternalRuntimeData -Source \"$persist_dir\\UserData\\$name\" -Target \"$env:APPDATA\\$name\"",
+        "    }",
+        "} finally { Remove-Module scoop-utils }"
+    ],
+    "pre_uninstall": [
+        "$ErrorActionPreference = 'Stop'",
+        "if (Get-Process lolhexguide, GameBoxServer -ErrorAction SilentlyContinue) { throw '请先退出英雄联盟助手及 GameBoxServer。' }",
+        "Import-Module \"$dir\\scoop-utils.psm1\" -Force",
+        "try {",
+        "    foreach ($name in @('lolBox', 'lolhexguide', 'lolBoxLaunch')) {",
+        "        Dismount-ExternalRuntimeData -Source \"$persist_dir\\UserData\\$name\" -Target \"$env:APPDATA\\$name\"",
+        "    }",
+        "} finally { Remove-Module scoop-utils }"
+    ],
+    "bin": [
+        [
+            "HuyaLolLauncher.exe",
+            "huyalol"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "HuyaLolLauncher.exe",
+            "英雄联盟助手",
+            "",
+            "lolhexguide.exe"
+        ]
+    ],
+    "persist": [
+        "UserData",
+        "log",
+        "data"
+    ],
+    "checkver": {
+        "script": [
+            "#Requires -Version 5.1",
+            "$ErrorActionPreference = 'Stop'",
+            "$body = @{",
+            "    iVersion = 3",
+            "    iRequestId = 1",
+            "    sServantName = 'mobileui'",
+            "    sFuncName = 'getMobileUpdateInfo'",
+            "    sBuffer = (@{ tReq = @{ tId = @{ sHuYaUA = 'pc_lolhexguide&0000000&official' } } } | ConvertTo-Json -Depth 4 -Compress)",
+            "} | ConvertTo-Json -Compress",
+            "$response = Invoke-RestMethod -Uri 'https://wsapi.huya.com/json' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 30",
+            "$result = $response.sBuffer | ConvertFrom-Json",
+            "if ($result.'@ret' -ne 0) { throw '虎牙更新接口返回错误。' }",
+            "$release = $result.tRsp",
+            "if ($release.sNewVersion -notmatch '^\\d+(\\.\\d+){3}$' -or",
+            "    $release.sAppUrl -notmatch '^https://download\\.huya\\.com/lolhexguide/[^\\s|]+\\.7z$' -or",
+            "    $release.sFileMd5 -notmatch '^[0-9a-fA-F]{32}$') { throw '更新响应缺少有效版本、官方 HTTPS 地址或 MD5。' }",
+            "'{0}|{1}|{2}' -f $release.sNewVersion, $release.sAppUrl, $release.sFileMd5.ToLowerInvariant()"
+        ],
+        "regex": "(?<version>\\d+(?:\\.\\d+){3})\\|(?<url>https://download\\.huya\\.com/lolhexguide/[^|]+\\.7z)\\|(?<md5>[a-f0-9]{32})"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl",
+                "hash": {
+                    "mode": "download"
+                }
+            }
+        }
+    },
+    "notes": [
+        "快捷方式和 huyalol 命令通过独立启动器运行，程序仍要求 UAC。请使用同一 Windows 用户提权。",
+        "更新或卸载前请退出助手。AppData 数据迁入 persist，原目录改为 junction；卸载保留 persist，使用 scoop uninstall -p 会删除持久数据。"
+    ]
+}
