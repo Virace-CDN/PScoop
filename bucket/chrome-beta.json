@@ -1,5 +1,5 @@
 {
-    "version": "154.0.8037.17",
+    "version": "155.0.8059.5",
     "description": "Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/chrome/beta",
     "depends": "pscoop/chromeplus",
@@ -9,8 +9,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "http://www.google.com/dl/release2/chrome/irqyv2n5xhx3vdsgtld37iojpy_154.0.8037.17/154.0.8037.17_chrome_installer.exe#/dl.7z",
-            "hash": "045a3b12f33ad03818b492aed315cea11939700c17c6219269241b3b57a1fa77"
+            "url": "http://www.google.com/dl/release2/chrome/ad2ednqlqhud5ztav4d5v7wjshgq_155.0.8059.5/155.0.8059.5_chrome_installer.exe#/dl.7z",
+            "hash": "6b744fd41ade4bba310eeeb9dfe2e3cd0467a4848140f527ab8996f4527edb7e"
         }
     },
     "installer": {
