@@ -1,12 +1,12 @@
 {
-    "version": "00.00.51.05",
+    "version": "00.00.52.05",
     "description": "虎牙英雄联盟助手（独立运行，无需安装虎牙客户端）。",
     "homepage": "https://www.huya.com/",
     "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://download.huya.com/lolhexguide/00.00.51.05/lolhexguide_00.00.00.51.7z",
-            "hash": "d832a9186c1620936373b1b1a002e902679cf52243ccfdeaa80121de257669d3"
+            "url": "https://download.huya.com/lolhexguide/00.00.52.05/lolhexguide_00.00.00.52.7z",
+            "hash": "e5279577db9ad0c4ff8aa732dabfc5f16f69d0d533c7efc7f89c348062f143c8"
         }
     },
     "pre_install": [
