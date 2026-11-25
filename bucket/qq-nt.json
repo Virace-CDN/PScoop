@@ -1,5 +1,5 @@
 {
-    "version": "9.9.33.52230",
+    "version": "9.9.38.54985",
     "description": "An instant messaging software service developed by Tencent",
     "homepage": "https://im.qq.com/pcqq/index.shtml",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/497e2f1f/QQ_9.9.33_260813_x64_01.exe#/dl.7z",
-            "hash": "b25c0d3ce9df764074a9118d0ded927e1b2d7ebf60e306112e8df18a040ec492"
+            "url": "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.38/beta/c2c6fcad/QQ9.9.38.54985_x64.exe#/dl.7z",
+            "hash": "505515ca321d6ca003ab2f3fbab1fd1f8ab2ccd9451d0507c9a29022a3f1dce2"
         }
     },
     "extract_dir": "Files",
@@ -21,21 +21,15 @@
     ],
     "checkver": {
         "script": [
-            "Import-Module \".\\scripts\\Utils.psm1\"",
-            "$data = Get-DumplingsInstallerInfo -AppId \"Tencent.QQ.NT\"",
-            "\"ver:$($data.Version);\"",
-            "\"url:$($data.x64);\""
+            "$release = & \".\\scripts\\QQNT\\Get-TelegramRelease.ps1\"",
+            "\"$($release.Version) $($release.Url)\""
         ],
-        "regex": "ver:(?<version>.+?); url:(?<url>.+?);"
+        "regex": "(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+) (?<url>https://\\S+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchUrl#/dl.7z",
-                "hash": {
-                    "url": "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/t/Tencent/QQ/NT/$version/Tencent.QQ.NT.installer.yaml",
-                    "regex": "Architecture: x64[\\s\\S]+?InstallerSha256:\\s?(.+)"
-                }
+                "url": "$matchUrl#/dl.7z"
             }
         }
     }
